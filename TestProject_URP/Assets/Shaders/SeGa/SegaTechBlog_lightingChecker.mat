@@ -1,0 +1,113 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: SegaTechBlog_lightingChecker
+  m_Shader: {fileID: 4800000, guid: bc120ae7bb13af54eb2a76c135e5855f, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords:
+  - DIRECTDIFFUSE
+  - DIRECTSPECULAR
+  - INDIRECTDIFFUSE
+  - INDIRECTSPECULAR
+  - _IBLBRDFMODE_PRE_INTEGRATION
+  m_InvalidKeywords:
+  - _VENV__
+  - _VGET__
+  - _VMAT__
+  - _VPOINT__
+  - _VSUN__
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _Albedo:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _BRDFLUT:
+        m_Texture: {fileID: 2800000, guid: 5cd44408097b2674e8a9143bc5aecf36, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Bentnormal:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _HeightMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MRAEMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MetallicGlossMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NormalMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NormalTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _AO: 1
+    - _AlphaClipEnabled: 0
+    - _Anisotropic: 0
+    - _Anisotropy: -1
+    - _BentnormalEnabled: 0
+    - _CheckValue: 0
+    - _ChkRange: 0.045
+    - _ChkTargetScale: 10
+    - _ChkTargetValue: 1.7
+    - _CullMode: 2
+    - _Cutoff: 0
+    - _DirectDiffuse: 1
+    - _DirectSpecular: 1
+    - _DitherEnabled: 0
+    - _HorizonFade: 0
+    - _IBLBrdfMode: 1
+    - _IndirectDiffuse: 1
+    - _IndirectSpecular: 1
+    - _MRAEMapEnabled: 0
+    - _Metalic: 1
+    - _Metallic: 0
+    - _NoPiDiv: 0
+    - _Reflectivity: 0.5
+    - _Roughness: 0.325
+    - _Smoothness: 0.849
+    - _UseColorMap: 0
+    - _UseMetMap: 0
+    - _UseNormalMap: 0
+    - _UseOccMap: 0
+    - _UseSmtMap: 0
+    - _VENV: 0
+    - _VGET: 0
+    - _VMAT: 0
+    - _VPOINT: 0
+    - _VSUN: 0
+    m_Colors:
+    - _AlbedoColor: {r: 0.46629995, g: 0.46629995, b: 0.46629995, a: 1}
+    - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _Tint: {r: 0.754717, g: 0.531193, b: 0.09611962, a: 1}
+  m_BuildTextureStacks: []

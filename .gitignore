@@ -1,0 +1,12 @@
+TestProject_URP/*.csproj
+
+.vs
+
+Library/
+Library/Artifacts
+Temp
+Logs
+obj
+*.sln
+/TestProject_URP/UserSettings
+TestProject_URP/.vsconfig
