@@ -8,6 +8,7 @@ public class CustomShadowLightHelper : MonoBehaviour
     [Range(0.0f,100.0f)]
     public float m_lightSize;
     public bool m_PCSS_Enable;
+    public 
     // Start is called before the first frame update
     void Start()
     {
@@ -27,8 +28,6 @@ public class CustomShadowLightHelper : MonoBehaviour
     void OnValidate()
     {
         Shader.SetGlobalFloat("_CustomShadowLightSize", m_lightSize);
-        
-        
         
     }
 }

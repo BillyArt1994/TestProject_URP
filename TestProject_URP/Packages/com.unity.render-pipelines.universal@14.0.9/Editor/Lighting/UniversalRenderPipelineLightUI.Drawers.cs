@@ -269,6 +269,9 @@ namespace UnityEditor.Rendering.Universal
 
             serializedLight.settings.DrawShadowsType();
 
+            //CustomShadow
+            EditorGUILayout.PropertyField(serializedLight.customShadowFlag, Styles.CustomShadowFalg);
+
             if (serializedLight.settings.shadowsType.hasMultipleDifferentValues)
             {
                 EditorGUILayout.HelpBox("Cannot multi edit different shadow types", MessageType.Info);

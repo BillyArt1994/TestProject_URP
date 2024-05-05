@@ -19,12 +19,12 @@ public class CustomShadowCasterPass : ScriptableRenderPass
         public static int _CustomShadowTexture;
     }
 
-    const string CUSTOM_SHADOW_KW = "_CSTUOM_SHADOW";
+    const string CUSTOM_SHADOW_KW = "_CUSTOM_SHADOW";
     Matrix4x4 m_ProjectionMatrix;
     Matrix4x4 m_WorldToCameraMatrix;
 
     FilteringSettings m_FilteringSettings = new FilteringSettings(RenderQueueRange.all);
-    ShaderTagId m_ShaderTagId = new ShaderTagId("DepthOnly");
+    ShaderTagId m_ShaderTagId = new ShaderTagId("ShadowCaster");
 
     public CustomShadowCasterPass(RenderPassEvent Event)
     {

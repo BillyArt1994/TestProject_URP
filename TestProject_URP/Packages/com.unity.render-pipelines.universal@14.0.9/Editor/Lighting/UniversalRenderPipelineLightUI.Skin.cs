@@ -23,6 +23,11 @@ namespace UnityEditor.Rendering.Universal
             public static readonly GUIContent SunSourceWarning = EditorGUIUtility.TrTextContent("This light is set as the current Sun Source, which requires a directional light. Go to the Lighting Window's Environment settings to edit the Sun Source.");
             public static readonly GUIContent CullingMask = EditorGUIUtility.TrTextContent("Culling Mask", "Specifies which layers will be affected or excluded from the light's effect on objects in the scene. This only applies to objects rendered using the Forward rendering path, and transparent objects rendered using the Deferred rendering path.");
 
+            /// <summary>
+            /// 
+            /// </summary>
+            public static readonly GUIContent CustomShadowFalg = EditorGUIUtility.TrTextContent("CustomShadow", "Custom Shadows");
+
             public static readonly GUIContent ShadowRealtimeSettings = EditorGUIUtility.TrTextContent("Realtime Shadows", "Settings for realtime direct shadows.");
             public static readonly GUIContent ShadowStrength = EditorGUIUtility.TrTextContent("Strength", "Controls how dark the shadows cast by the light will be.");
             public static readonly GUIContent ShadowNearPlane = EditorGUIUtility.TrTextContent("Near Plane", "Controls the value for the near clip plane when rendering shadows. Currently clamped to 0.1 units or 1% of the lights range property, whichever is lower.");

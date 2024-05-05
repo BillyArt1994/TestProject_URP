@@ -13,10 +13,10 @@ using static UnityEngine.Rendering.DebugUI.Table;
 //[RequireComponent(typeof(Camera), typeof(UniversalAdditionalCameraData))]
 public class CustomShadow : MonoBehaviour
 {
+    public TexSize m_shadowMapSize = TexSize._1024;
     public Transform m_target;
     public Vector3 m_offest;
     public Light m_light;
-    
     public float m_radius = 1f;
     public float m_sceneCaptureDistance = 4f;
     [Range(0.0f,5.0f)]
@@ -27,6 +27,17 @@ public class CustomShadow : MonoBehaviour
     private bool dirty = true;
 
     public static CustomShadow m_Instance;
+
+    public enum TexSize
+    {
+        _64 = 1 << 6,
+        _128 = 1 << 7,
+        _256 = 1 << 8,
+        _512 = 1 << 9,
+        _1024 = 1 << 10,
+        _2048 = 1 << 11,
+        _4096 = 1 << 12,
+    }
 
     CustomShadow()
     {
@@ -55,13 +66,14 @@ public class CustomShadow : MonoBehaviour
             //target = this.transform;
         }
 
-        m_customShadow.Init(1024, 1024);
+        m_customShadow.Init((int)m_shadowMapSize, (int)m_shadowMapSize);
     }
 
     void OnValidate()
     {
         SetFocus();
         SetShadowBias();
+        m_customShadow.Init((int)m_shadowMapSize, (int)m_shadowMapSize);
     }
 
     public void SetFocus()

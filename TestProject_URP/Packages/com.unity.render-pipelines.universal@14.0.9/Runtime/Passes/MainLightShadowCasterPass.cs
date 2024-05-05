@@ -21,6 +21,10 @@ namespace UnityEngine.Rendering.Universal.Internal
             public static int _ShadowOffset0;
             public static int _ShadowOffset1;
             public static int _ShadowmapSize;
+            /// <summary>
+            /// For CustomShadow flag.
+            /// </summary>
+            public static int _CustomShadowParams;
         }
 
         const int k_MaxCascades = 4;
@@ -60,6 +64,7 @@ namespace UnityEngine.Rendering.Universal.Internal
 
             MainLightShadowConstantBuffer._WorldToShadow = Shader.PropertyToID("_MainLightWorldToShadow");
             MainLightShadowConstantBuffer._ShadowParams = Shader.PropertyToID("_MainLightShadowParams");
+            MainLightShadowConstantBuffer._CustomShadowParams = Shader.PropertyToID("_CustomShadowParams");
             MainLightShadowConstantBuffer._CascadeShadowSplitSpheres0 = Shader.PropertyToID("_CascadeShadowSplitSpheres0");
             MainLightShadowConstantBuffer._CascadeShadowSplitSpheres1 = Shader.PropertyToID("_CascadeShadowSplitSpheres1");
             MainLightShadowConstantBuffer._CascadeShadowSplitSpheres2 = Shader.PropertyToID("_CascadeShadowSplitSpheres2");
@@ -202,6 +207,8 @@ namespace UnityEngine.Rendering.Universal.Internal
             CoreUtils.SetKeyword(cmd, ShaderKeywordStrings.MainLightShadows, true);
             cmd.SetGlobalVector(MainLightShadowConstantBuffer._ShadowParams,
                 new Vector4(1, 0, 1, 0));
+            //cmd.SetGlobalVector(MainLightShadowConstantBuffer._ShadowParams,
+               // new Vector4(1, 0, 1, 0));
             cmd.SetGlobalVector(MainLightShadowConstantBuffer._ShadowmapSize,
                 new Vector4(1f / m_EmptyLightShadowmapTexture.rt.width, 1f / m_EmptyLightShadowmapTexture.rt.height, m_EmptyLightShadowmapTexture.rt.width, m_EmptyLightShadowmapTexture.rt.height));
             context.ExecuteCommandBuffer(cmd);
@@ -218,7 +225,7 @@ namespace UnityEngine.Rendering.Universal.Internal
             if (shadowLightIndex == -1)
                 return;
 
-            VisibleLight shadowLight = lightData.visibleLights[shadowLightIndex];
+            VisibleLight shadowLight = lightData .visibleLights[shadowLightIndex];
 
             var cmd = renderingData.commandBuffer;
             using (new ProfilingScope(cmd, ProfilingSampler.Get(URPProfileId.MainLightShadow)))
@@ -251,6 +258,7 @@ namespace UnityEngine.Rendering.Universal.Internal
         void SetupMainLightShadowReceiverConstants(CommandBuffer cmd, ref VisibleLight shadowLight, ref ShadowData shadowData)
         {
             Light light = shadowLight.light;
+
             bool softShadows = shadowLight.light.shadows == LightShadows.Soft && shadowData.supportsSoftShadows;
 
             int cascadeCount = m_ShadowCasterCascadesCount;
@@ -276,7 +284,13 @@ namespace UnityEngine.Rendering.Universal.Internal
             cmd.SetGlobalMatrixArray(MainLightShadowConstantBuffer._WorldToShadow, m_MainLightShadowMatrices);
             cmd.SetGlobalVector(MainLightShadowConstantBuffer._ShadowParams,
                 new Vector4(light.shadowStrength, softShadowsProp, shadowFadeScale, shadowFadeBias));
-
+            // if light use cutomshadow will set CustomShadowParams to shaders
+            if (light.GetUniversalAdditionalLightData().customShadow)
+            {
+                cmd.SetGlobalVector(MainLightShadowConstantBuffer._CustomShadowParams,
+                new Vector4(1, 1, 1, 1));
+            }
+            
             if (m_ShadowCasterCascadesCount > 1)
             {
                 cmd.SetGlobalVector(MainLightShadowConstantBuffer._CascadeShadowSplitSpheres0,

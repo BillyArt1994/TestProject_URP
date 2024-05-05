@@ -73,6 +73,29 @@ float4      _MainLightShadowOffset1; // xy: offset2, zw: offset3
 float4      _MainLightShadowParams;   // (x: shadowStrength, y: >= 1.0 if soft shadows, 0.0 otherwise, z: main light fade scale, w: main light fade bias)
 float4      _MainLightShadowmapSize;  // (xy: 1/width and 1/height, zw: width and height)
 
+// CustomShadow
+TEXTURE2D_SHADOW(_CustomShadowTexture);
+//TEXTURE2D(_CustomShadowTexture);
+//SAMPLER(sampler_CustomShadowTexture);
+float4      _CustomShadowTexture_TexelSize;
+float4      _CustomShadowParams;  // x: shadowStrength,
+float4x4    _CustomShadowMatrix;
+static float2 poissonDisk[32] = 
+{
+	float2(-0.975402, -0.0711386 ),	float2(-0.920347, -0.41142 ),	float2(-0.883908, 0.217872 ),
+	float2(-0.884518, 0.568041 ),	float2(-0.811945, 0.90521 ),	float2(-0.792474, -0.779962),
+	float2(-0.614856, 0.386578 ),float2(-0.580859, -0.208777),float2(-0.53795, 0.716666 ),
+	float2(-0.515427, 0.0899991),float2(-0.454634, -0.707938),float2(-0.420942, 0.991272 ),
+	float2(-0.261147, 0.588488 ),float2(-0.211219, 0.114841 ),float2(-0.146336, -0.259194),
+	float2(-0.139439, -0.888668),float2(0.0116886, 0.326395 ),float2(0.0380566, 0.625477 ),
+	float2(0.0625935, -0.50853 ),float2(0.125584, 0.0469069 ),float2(0.169469, -0.997253 ),
+    float2(0.320597, 0.291055 ),float2(0.359172, -0.633717 ),float2(0.435713, -0.250832 ),
+	float2(0.507797, -0.916562 ),float2(0.545763, 0.730216 ),float2(0.56859, 0.11655 ),
+    float2(0.743156, -0.505173 ),float2(0.736442, -0.189734 ),float2(0.843562, 0.357036 ),
+	float2(0.865413, 0.763726 ),float2(0.872005, -0.927 ),
+};
+///----------------------end----------------------------
+
 float4      _AdditionalShadowOffset0; // xy: offset0, zw: offset1
 float4      _AdditionalShadowOffset1; // xy: offset2, zw: offset3
 float4      _AdditionalShadowFadeParams; // x: additional light fade scale, y: additional light fade bias, z: 0.0, w: 0.0)
@@ -246,6 +269,29 @@ real SampleShadowmapFilteredHighQuality(TEXTURE2D_SHADOW_PARAM(ShadowMap, sample
                 + fetchesWeights[15] * SAMPLE_TEXTURE2D_SHADOW(ShadowMap, sampler_ShadowMap, float3(fetchesUV[15].xy, shadowCoord.z));
 }
 
+real SampleShadowmapCustomFiltered(TEXTURE2D_SHADOW_PARAM(ShadowMap, sampler_ShadowMap), float4 shadowCoord)
+{
+    real attenuation;
+    float PCFshadow = 0 ;
+    float cnt = 0 ;
+
+    for(int ns = 0; ns < 7;++ns)
+    {
+      float2 Offset = _CustomShadowTexture_TexelSize.xy*poissonDisk[ns];
+      PCFshadow += SAMPLE_TEXTURE2D_SHADOW(ShadowMap, sampler_ShadowMap,shadowCoord.xyz+float3(Offset,0.0));
+      cnt += 1.0;
+    }
+    half4 shadowParams = GetMainLightShadowParams();
+    half shadowStrength = shadowParams.x;
+    attenuation =  PCFshadow/cnt;
+    //return  SAMPLE_TEXTURE2D_SHADOW(ShadowMap, sampler_ShadowMap,shadowCoord.xyz);
+    attenuation = LerpWhiteTo(attenuation, shadowStrength);
+
+    // Shadow coords that fall out of the light frustum volume must always return attenuation 1.0
+    // TODO: We could use branch here to save some perf on some platforms.
+    return BEYOND_SHADOW_FAR(shadowCoord) ? 1.0 : attenuation;
+}
+
 real SampleShadowmapFiltered(TEXTURE2D_SHADOW_PARAM(ShadowMap, sampler_ShadowMap), float4 shadowCoord, ShadowSamplingData samplingData)
 {
     real attenuation = real(1.0);
@@ -291,6 +337,9 @@ real SampleShadowmap(TEXTURE2D_SHADOW_PARAM(ShadowMap, sampler_ShadowMap), float
         {
             attenuation = real(SAMPLE_TEXTURE2D_SHADOW(ShadowMap, sampler_ShadowMap, shadowCoord.xyz));
         }
+    
+    //#elif _CUSTOM_SHADOW
+    //    attenuation = SampleShadowmapCustomFiltered(SAMPLE_TEXTURE2D_SHADOW(ShadowMap, sampler_ShadowMap, shadowCoord.xyz));
     #else
         attenuation = real(SAMPLE_TEXTURE2D_SHADOW(ShadowMap, sampler_ShadowMap, shadowCoord.xyz));
     #endif
@@ -324,8 +373,11 @@ float4 TransformWorldToShadowCoord(float3 positionWS)
     half cascadeIndex = half(0.0);
 #endif
 
+#ifdef _CUSTOM_SHADOW
+    float4 shadowCoord = mul(_CustomShadowMatrix,half4(positionWS,1.0));
+#else
     float4 shadowCoord = mul(_MainLightWorldToShadow[cascadeIndex], float4(positionWS, 1.0));
-
+#endif
     return float4(shadowCoord.xyz, 0);
 }
 
@@ -335,7 +387,12 @@ half MainLightRealtimeShadow(float4 shadowCoord)
         return half(1.0);
     #elif defined(_MAIN_LIGHT_SHADOWS_SCREEN) && !defined(_SURFACE_TYPE_TRANSPARENT)
         return SampleScreenSpaceShadowmap(shadowCoord);
-    #else
+    // custom shadow 
+    #elif defined(_CUSTOM_SHADOW)
+        half4 shadowParams =  _CustomShadowParams;
+        shadowCoord.xyz = (shadowCoord.xyz/shadowCoord.w)*0.5+0.5;
+        return SampleShadowmapCustomFiltered(TEXTURE2D_ARGS(_CustomShadowTexture, sampler_LinearClampCompare), shadowCoord);
+    #else 
         ShadowSamplingData shadowSamplingData = GetMainLightShadowSamplingData();
         half4 shadowParams = GetMainLightShadowParams();
         return SampleShadowmap(TEXTURE2D_ARGS(_MainLightShadowmapTexture, sampler_LinearClampCompare), shadowCoord, shadowSamplingData, shadowParams, false);

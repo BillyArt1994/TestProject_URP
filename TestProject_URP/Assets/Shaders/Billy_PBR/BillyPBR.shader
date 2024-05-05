@@ -66,7 +66,7 @@
             #pragma shader_feature_local _ _ALPHACLIP_ENABLED
             #pragma multi_compile_fragment _ _SHADOWS_SOFT
             #pragma multi_compile _ _ADDITIONAL_LIGHTS
-            #pragma multi_compile_fragment _ _CSTUOM_SHADOW
+            #pragma multi_compile_fragment _ _CUSTOM_SHADOW
 
             #include "BillyPBRForwardPass.hlsl"
 

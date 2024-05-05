@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1ebdc8e4e7e90d458704f4ddb0add77, type: 3}
   m_Name: CustomShadow
   m_EditorClassIdentifier: 
-  m_Active: 0
-  m_event: 200
+  m_Active: 1
+  m_event: 50
   m_layerMask:
     serializedVersion: 2
     m_Bits: 4294967295

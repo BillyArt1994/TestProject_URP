@@ -1,16 +1,13 @@
 {
 	"folders": [
 		{
-			"path": "Packages/com.unity.render-pipelines.universal@14.0.9/ShaderLibrary"
-		},
-		{
-			"path": "Packages/com.unity.render-pipelines.universal@14.0.9/Shaders"
-		},
-		{
-			"path": "Packages/com.unity.render-pipelines.core@14.0.9/ShaderLibrary"
-		},
-		{
 			"path": "Assets/Shaders"
+		},
+		{
+			"path": "Packages/com.unity.render-pipelines.core@14.0.9"
+		},
+		{
+			"path": "Packages/com.unity.render-pipelines.universal@14.0.9"
 		}
 	]
 }

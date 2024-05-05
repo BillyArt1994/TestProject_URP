@@ -26,6 +26,7 @@ struct Varyings
     float4 screenPos     :TEXCOORD7;
 };
 
+/*
 static float2 poissonDisk[16] = {
     float2(-0.94201624, -0.39906216),  float2(0.94558609, -0.76890725),
     float2(-0.094184101, -0.92938870), float2(0.34495938, 0.29387760),
@@ -87,6 +88,7 @@ float PercentageCloserSoftShadows(float3 shadowPos)
     float shadow = PercentageCloserFiltering(shadowPos,penumbraWidth);
     return shadow;
 }
+*/
 
 
 Varyings PBRPassVertex (Attributes input)
@@ -136,7 +138,7 @@ float4 PBRPassFragment (Varyings input) : SV_Target
     BillyBRDFData brdfData = (BillyBRDFData)0;
     InitializeBRDFData(albedo,ao,roughness,metalic,reflectance,emissive,brdfData);
 
-    Light mainlight = GetMainLight(TransformWorldToShadowCoord(input.positionWS.xyz));
+    Light mainlight = GetMainLight(mul(_CustomShadowMatrix,half4(input.positionWS,1.0)));//TransformWorldToShadowCoord(input.positionWS.xyz));
 
     float3 viewDir = normalize(input.viewDirWS);
 
@@ -145,21 +147,7 @@ float4 PBRPassFragment (Varyings input) : SV_Target
 
     float3 normal = TransformTangentToWorld(normalTS,half3x3(input.tangentWS.xyz,input.BtangentWS.xyz,input.normalWS.xyz));
     normal = normalize(normal.xyz);
-
-    #if _CSTUOM_SHADOW
-    float4 lightClipPos =  mul(_CustomShadowMatrix,half4(input.positionWS,1.0));
-    float3 shadowPos = ((lightClipPos.xyz/lightClipPos.w)*0.5+0.5);
-    float depth_ShadowMap = SAMPLE_TEXTURE2D(_CustomShadowTexture,sampler_MRAEMap, shadowPos.xy).r;
-    //float shadow = PercentageCloserFiltering(shadowPos,bias,_CustomShadowFilterScale);//shadowPos.z -bias >depth_ShadowMap ? 0:1;
-    float shadow = PercentageCloserSoftShadows(shadowPos);//shadowPos.z -bias >depth_ShadowMap ? 0:1;
-    mainlight.shadowAttenuation = shadow;
-   // return float4(mainlight.shadowAttenuation.xxx,1.0);
-    #endif 
-
-
-
     float4 col = Billy_PBS_Lighting(brdfData,normal,viewDir,input.normalWS.xyz,mainlight);
-
     half3 additionalLightsSumResult = 0;
 
     #ifdef _ADDITIONAL_LIGHTS

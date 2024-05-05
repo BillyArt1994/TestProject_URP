@@ -37,12 +37,12 @@ float4 GetShadowPositionHClip(Attributes i)
         float3 lightDirectionWS = _LightDirection;
     #endif
 
-    #if _CSTUOM_SHADOW
-        float bias = max(_CustomShadowBias*(1.0-dot(normal,mainlight.direction)),_CustomShadowBias);
-        float4 positionCS = TransformWorldToHClip(positionWS+bias);
-    #else
+   // #if _CUSTOM_SHADOW
+   //     float bias = max(_CustomShadowBias*(1.0-dot(normal,mainlight.direction)),_CustomShadowBias);
+   //     float4 positionCS = TransformWorldToHClip(positionWS+bias);
+   // #else
         float4 positionCS = TransformWorldToHClip(ApplyShadowBias(positionWS, normalWS, lightDirectionWS));
-    #endif
+   // #endif
     
     #if UNITY_REVERSED_Z
         positionCS.z = min(positionCS.z, UNITY_NEAR_CLIP_VALUE);

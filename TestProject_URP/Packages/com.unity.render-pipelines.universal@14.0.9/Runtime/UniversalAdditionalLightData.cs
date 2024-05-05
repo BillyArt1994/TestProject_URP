@@ -149,6 +149,16 @@ namespace UnityEngine.Rendering.Universal
             set { m_RenderingLayers = value; }
         }
 
+        /// <summary>
+        /// CustomShadow Flag
+        /// </summary>
+        [SerializeField] bool m_customShadowFlag = false;
+        public bool customShadow
+        {
+            get { return m_customShadowFlag; }
+            set { m_customShadowFlag = value;}
+        }
+
         [SerializeField] bool m_CustomShadowLayers = false;
 
         /// <summary>
