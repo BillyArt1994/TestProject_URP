@@ -134,7 +134,7 @@ Light GetMainLight(float4 shadowCoord,float3 normalWS)
     Light light = GetMainLight();
     // get shadow Attenuation and Thickness
     #if defined(_CUSTOM_THICKNESS)
-    MainLightRealtimeShadowAndThickness(shadowCoord,normalWS,light.shadowAttenuation,light.thickness);
+    MainLightRealtimeShadowAndThickness(shadowCoord,normalWS,light.direction,light.shadowAttenuation,light.thickness);
     #else
     light = GetMainLight(shadowCoord);
     #endif

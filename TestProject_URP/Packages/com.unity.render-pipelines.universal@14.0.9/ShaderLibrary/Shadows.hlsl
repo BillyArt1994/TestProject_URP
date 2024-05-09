@@ -293,28 +293,43 @@ real SampleShadowmapCustomFiltered(TEXTURE2D_PARAM(ShadowMap, sampler_ShadowMap)
 }
 
 // 
-void SampleShadowmapCustomFilteredAndEvaluateThickness(TEXTURE2D_PARAM(ShadowMap, sampler_ShadowMap), float4 shadowCoord,float3 normalWS,out float attenuation,out float thickness)
+void SampleShadowmapCustomFilteredAndEvaluateThickness(TEXTURE2D_PARAM(ShadowMap, sampler_ShadowMap), float4 shadowCoord,float3 normalWS,float3 lightDir,out float attenuation,out float thickness)
 {
     float PCFshadow = 0 ;
+    float shadowZBias = 0;
     float cnt = 0 ;
     thickness = 0.0;
     attenuation = 0.0;
+    float shadowMapFrist = 0;
+
 
     for(int ns = 0; ns < 32;++ns)
     {
       float2 Offset = _CustomShadowTexture_TexelSize.xy*poissonDisk[ns]*_CustomShadowCasterParams.x;
       float shadowMapZ = SAMPLE_TEXTURE2D(ShadowMap, sampler_ShadowMap,shadowCoord.xy + Offset);
-      PCFshadow += shadowMapZ < shadowCoord.z ? 0.0 : 1.0;
-      thickness += abs(shadowMapZ - shadowCoord.z);
+      
+      if (ns == 0) shadowMapFrist = shadowMapZ;
+      
+      float invNdotL = 1.0 - saturate(dot(lightDir, normalWS));
+      float scale = invNdotL * _ShadowBias.y;
+  
+      // normal bias is negative since we want to apply an inset normal offset
+      shadowZBias = lightDir * _ShadowBias.xxx + shadowCoord.z;
+      shadowZBias = normalWS * scale.xxx + shadowCoord.z;
+
+      PCFshadow += shadowMapZ < shadowZBias ? 0.0 : 1.0;
+      //thickness += abs(shadowMapZ - shadowCoord.z);
       cnt += 1.0;
     }
+    
     half4 shadowParams = GetMainLightShadowParams();
     half shadowStrength = shadowParams.x;
     attenuation =  PCFshadow/cnt;
+    //attenuation= SAMPLE_TEXTURE2D(ShadowMap, sampler_ShadowMap,shadowCoord.xy);
     attenuation = LerpWhiteTo(attenuation, shadowStrength);
-    BEYOND_SHADOW_FAR(shadowCoord) ? 1.0 : attenuation;
+    attenuation = BEYOND_SHADOW_FAR(shadowCoord) ? 1.0 : attenuation;
     //attenuation = 0.0;
-    thickness = thickness/cnt;
+    thickness = abs(shadowMapFrist - shadowCoord.z);
 }
 
 real SampleShadowmapFiltered(TEXTURE2D_SHADOW_PARAM(ShadowMap, sampler_ShadowMap), float4 shadowCoord, ShadowSamplingData samplingData)
@@ -426,9 +441,11 @@ half MainLightRealtimeShadow(float4 shadowCoord)
 }
 
 // 
-void MainLightRealtimeShadowAndThickness(float4 shadowCoord,float3 normalWS,out float attenuation,out float thickness)
+void MainLightRealtimeShadowAndThickness(float4 shadowCoord,float3 normalWS,float3 lightDir,out float attenuation,out float thickness)
 {
-    SampleShadowmapCustomFilteredAndEvaluateThickness(TEXTURE2D_ARGS(_CustomShadowTexture, sampler_CustomShadowTexture),shadowCoord,normalWS,attenuation,thickness);
+    half4 shadowParams =  _CustomShadowCasterParams;
+    shadowCoord.xyz = (shadowCoord.xyz/shadowCoord.w)*0.5+0.5;
+    SampleShadowmapCustomFilteredAndEvaluateThickness(TEXTURE2D_ARGS(_CustomShadowTexture, sampler_CustomShadowTexture),shadowCoord,normalWS,lightDir,attenuation,thickness);
 }
 
 // returns 0.0 if position is in light's shadow
