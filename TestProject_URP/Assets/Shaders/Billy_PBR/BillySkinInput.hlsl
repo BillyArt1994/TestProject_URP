@@ -16,6 +16,8 @@
     half4 _TranslucencyColor;
     half4 _fakeAmbientIntensity;
     half4 _fakeAmbientColor;
+    half4 _CurvatureScaleBias;
+    half4 _ShadowScaleBias;
 
     float4 _EmissionColor;
     float4 _Albedo_ST;
@@ -25,17 +27,8 @@
     float4 _BRDFLUT_ST;
     float _Cutoff;
     float _DeepScatterFalloff;
-    
-    float4x4 _CustomShadowMatrix;
-    //sampler2D _CustomShadowTexture;
-    float4 _CustomShadowTexture_TexelSize;
-    float _CustomShadowBias;
-    float _CustomShadowFilterScale;
-    float _CustomShadowLightSize;
-    sampler2D _BeckManTex;
 
-    TEXTURE2D_SHADOW(_CustomShadowTexture);
-    SAMPLER_CMP(sampler_LinearClampCompare_CST);
+    sampler2D _BeckManTex;
 
     TEXTURE2D(_Curvature);       SAMPLER(sampler_Curvature);
     TEXTURE2D(_Thickness);       SAMPLER(sampler_Thickness);

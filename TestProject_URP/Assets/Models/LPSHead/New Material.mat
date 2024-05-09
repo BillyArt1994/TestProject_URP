@@ -8,14 +8,12 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: New Material
-  m_Shader: {fileID: 4800000, guid: bc120ae7bb13af54eb2a76c135e5855f, type: 3}
+  m_Shader: {fileID: 4800000, guid: 6f2c4536d0e4e8c479ce8ed565ce62f3, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - DIRECTDIFFUSE
   - DIRECTSPECULAR
-  - INDIRECTDIFFUSE
-  - INDIRECTSPECULAR
   - _IBLBRDFMODE_PRE_INTEGRATION
   m_InvalidKeywords: []
   m_LightmapFlags: 4
@@ -29,7 +27,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _Albedo:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 608987e17d439d4448a5b1d728e6e7cf, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BRDFLUT:
@@ -160,10 +158,10 @@ Material:
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
-    - _HorizonFade: 0.2
+    - _HorizonFade: 0.25
     - _IBLBrdfMode: 1
-    - _IndirectDiffuse: 1
-    - _IndirectSpecular: 1
+    - _IndirectDiffuse: 0
+    - _IndirectSpecular: 0
     - _MRAEMapEnabled: 0
     - _Metalic: 0
     - _Metallic: 0
@@ -172,7 +170,7 @@ Material:
     - _QueueOffset: 0
     - _ReceiveShadows: 1
     - _Reflectivity: 0.5
-    - _Roughness: 0.5
+    - _Roughness: 0.523
     - _SkinSecondSpecScale: 0
     - _SkinToneScale: 0
     - _Smoothness: 0.5
@@ -182,7 +180,7 @@ Material:
     - _SrcBlendAlpha: 1
     - _Surface: 0
     - _TranslucencyScale: 0
-    - _TranslucencyThreshold: 0
+    - _TranslucencyThreshold: -16.57
     - _TranslucencyViewDependency: 0
     - _WorkflowMode: 1
     - _ZWrite: 1
@@ -190,9 +188,11 @@ Material:
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _CurvatureScaleBias: {r: 0.12, g: 0.29, b: 0, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _ShadowScaleBias: {r: 0, g: 0, b: 0, a: 0}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
-    - _Tint: {r: 0.46666667, g: 0.46666667, b: 0.46666667, a: 0.46666667}
+    - _Tint: {r: 1, g: 1, b: 1, a: 0.46666667}
     - _TranslucencyColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
     - _fakeAmbientColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   m_BuildTextureStacks: []

@@ -74,6 +74,7 @@ public class CustomShadow : MonoBehaviour
         SetFocus();
         SetShadowBias();
         m_customShadow.Init((int)m_shadowMapSize, (int)m_shadowMapSize);
+       // Shader.SetGlobalVector("_CustomShadowParams", new Vector4(m_depthBias, 0.0f, 0.0f, 0.0f));
     }
 
     public void SetFocus()
@@ -146,28 +147,29 @@ public class CustomShadow : MonoBehaviour
     //    Gizmos.DrawWireCube(center, size);
     //}
 
-    [ContextMenu("My Func")]
-    void Print()
-    {
-
-
-        var targetPoint_pos = m_target.position
-            + m_target.right * m_offest.x
-            + m_target.up * m_offest.y
-            + m_target.forward * m_offest.z;
-
-        var pos = transform.position;//targetPoint_pos - m_light.transform.forward * (m_radius + m_sceneCaptureDistance);
-        var rot = transform.rotation;//m_light.transform.rotation;
-        print("视口矩阵"+Matrix4x4.TRS(pos, rot, Vector3.one).inverse);
-
-        float nearClipPlane = 0f;
-        float farClipPlane = m_radius * 2f + m_sceneCaptureDistance;
-        print("投影矩阵"+Matrix4x4.Ortho(-m_radius, m_radius, -m_radius, m_radius, nearClipPlane, farClipPlane));
-    }
+    //[ContextMenu("My Func")]
+    //void Print()
+    //{
+    //
+    //
+    //    var targetPoint_pos = m_target.position
+    //        + m_target.right * m_offest.x
+    //        + m_target.up * m_offest.y
+    //        + m_target.forward * m_offest.z;
+    //
+    //    var pos = transform.position;//targetPoint_pos - m_light.transform.forward * (m_radius + m_sceneCaptureDistance);
+    //    var rot = transform.rotation;//m_light.transform.rotation;
+    //    print("视口矩阵"+Matrix4x4.TRS(pos, rot, Vector3.one).inverse);
+    //
+    //    float nearClipPlane = 0f;
+    //    float farClipPlane = m_radius * 2f + m_sceneCaptureDistance;
+    //    print("投影矩阵"+Matrix4x4.Ortho(-m_radius, m_radius, -m_radius, m_radius, nearClipPlane, farClipPlane));
+    //}
 
     void SetShadowBias()
     {
         Shader.SetGlobalFloat("_CustomShadowBias", m_depthBias);
         Shader.SetGlobalFloat("_CustomShadowFilterScale", m_filterScale);
+        
     }
 }

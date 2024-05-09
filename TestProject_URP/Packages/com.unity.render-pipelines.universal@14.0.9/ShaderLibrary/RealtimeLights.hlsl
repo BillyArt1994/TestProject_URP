@@ -16,6 +16,11 @@ struct Light
     float   distanceAttenuation; // full-float precision required on some platforms
     half    shadowAttenuation;
     uint    layerMask;
+
+    #if defined(_CUSTOM_THICKNESS)
+    //custom thickness form shadomap
+    half    thickness;
+    #endif
 };
 
 // WebGL1 does not support the variable conditioned for loops used for additional lights
@@ -111,7 +116,9 @@ Light GetMainLight()
     light.color = _MainLightColor.rgb;
 
     light.layerMask = _MainLightLayerMask;
-
+#if defined(_CUSTOM_THICKNESS)
+    light.thickness = 1.0;
+#endif
     return light;
 }
 
@@ -119,6 +126,18 @@ Light GetMainLight(float4 shadowCoord)
 {
     Light light = GetMainLight();
     light.shadowAttenuation = MainLightRealtimeShadow(shadowCoord);
+    return light;
+}
+
+Light GetMainLight(float4 shadowCoord,float3 normalWS)
+{   
+    Light light = GetMainLight();
+    // get shadow Attenuation and Thickness
+    #if defined(_CUSTOM_THICKNESS)
+    MainLightRealtimeShadowAndThickness(shadowCoord,normalWS,light.shadowAttenuation,light.thickness);
+    #else
+    light = GetMainLight(shadowCoord);
+    #endif
     return light;
 }
 

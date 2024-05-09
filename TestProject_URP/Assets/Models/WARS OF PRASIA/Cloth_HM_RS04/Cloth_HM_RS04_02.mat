@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: New Material
+  m_Name: Cloth_HM_RS04_02
   m_Shader: {fileID: 4800000, guid: bc120ae7bb13af54eb2a76c135e5855f, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -16,7 +16,9 @@ Material:
   - DIRECTSPECULAR
   - INDIRECTDIFFUSE
   - INDIRECTSPECULAR
+  - _ALPHACLIP_ENABLED
   - _IBLBRDFMODE_PRE_INTEGRATION
+  - _MRAE_MAP_ENABLED
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -29,11 +31,11 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _Albedo:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: ebbee2132d4ba4e42969aedf5b5a21be, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BRDFLUT:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 5cd44408097b2674e8a9143bc5aecf36, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BaseMap:
@@ -69,7 +71,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MRAEMap:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: aa6ac3bf458102a49b92cc000f63492a, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
@@ -81,7 +83,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _NormalTex:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 089619788985b2047b7da67996a15a46, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
@@ -112,7 +114,7 @@ Material:
     m_Floats:
     - _AO: 1
     - _AlphaClip: 0
-    - _AlphaClipEnabled: 0
+    - _AlphaClipEnabled: 1
     - _AlphaToMask: 0
     - _Anisotropic: 0
     - _BentnormalEnabled: 0
@@ -122,12 +124,12 @@ Material:
     - _CheckValue: 0
     - _ChkRange: 0.045
     - _ChkTargetScale: 1
-    - _ChkTargetValue: 0.18
+    - _ChkTargetValue: 0.1842
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
     - _Cull: 2
     - _CullMode: 2
-    - _Cutoff: 0.5
+    - _Cutoff: 0.9
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
     - _DirectDiffuse: 1
@@ -143,7 +145,7 @@ Material:
     - _IBLBrdfMode: 1
     - _IndirectDiffuse: 1
     - _IndirectSpecular: 1
-    - _MRAEMapEnabled: 0
+    - _MRAEMapEnabled: 1
     - _Metalic: 0
     - _Metallic: 0
     - _OcclusionStrength: 1
@@ -151,8 +153,8 @@ Material:
     - _QueueOffset: 0
     - _ReceiveShadows: 1
     - _Reflectivity: 0.5
-    - _Roughness: 1
-    - _Smoothness: 0
+    - _Roughness: 0.5
+    - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
@@ -161,13 +163,13 @@ Material:
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
-    - _BaseColor: {r: 0.4627451, g: 0.4627451, b: 0.4627451, a: 1}
-    - _Color: {r: 0.462745, g: 0.462745, b: 0.462745, a: 1}
+    - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
-    - _Tint: {r: 0.4627451, g: 0.4627451, b: 0.4627451, a: 1}
+    - _Tint: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
---- !u!114 &5039212880177901936
+--- !u!114 &4014725066117183148
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}

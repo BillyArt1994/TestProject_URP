@@ -21,7 +21,6 @@ struct Varyings
     float4 tangentWS     : TEXCOORD3;
     float4 BtangentWS    : TEXCOORD4;
     float3 viewDirWS     : TEXCOORD5;
-    float4 shadowCoord   : TEXCOORD6;
     float4 positionCS    : SV_POSITION;
     float4 screenPos     :TEXCOORD7;
 };
@@ -110,7 +109,6 @@ Varyings PBRPassVertex (Attributes input)
     output.BtangentWS.xyz = normalInput.bitangentWS;
     output.positionWS = vertexInput.positionWS;
     output.viewDirWS = GetCameraPositionWS() - vertexInput.positionWS;
-    output.shadowCoord = GetShadowCoord(vertexInput);
     output.uv = input.texcoord;
     output.screenPos = ComputeScreenPos(output.positionCS);
     return output;
@@ -138,7 +136,7 @@ float4 PBRPassFragment (Varyings input) : SV_Target
     BillyBRDFData brdfData = (BillyBRDFData)0;
     InitializeBRDFData(albedo,ao,roughness,metalic,reflectance,emissive,brdfData);
 
-    Light mainlight = GetMainLight(mul(_CustomShadowMatrix,half4(input.positionWS,1.0)));//TransformWorldToShadowCoord(input.positionWS.xyz));
+    Light mainlight = GetMainLight(TransformWorldToShadowCoord(input.positionWS.xyz));
 
     float3 viewDir = normalize(input.viewDirWS);
 

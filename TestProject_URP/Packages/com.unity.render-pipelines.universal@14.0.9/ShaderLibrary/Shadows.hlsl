@@ -74,11 +74,12 @@ float4      _MainLightShadowParams;   // (x: shadowStrength, y: >= 1.0 if soft s
 float4      _MainLightShadowmapSize;  // (xy: 1/width and 1/height, zw: width and height)
 
 // CustomShadow
-TEXTURE2D_SHADOW(_CustomShadowTexture);
+TEXTURE2D(_CustomShadowTexture);
+SAMPLER(sampler_CustomShadowTexture);
 //TEXTURE2D(_CustomShadowTexture);
 //SAMPLER(sampler_CustomShadowTexture);
 float4      _CustomShadowTexture_TexelSize;
-float4      _CustomShadowParams;  // x: shadowStrength,
+float4      _CustomShadowCasterParams;  // x: shadowStrength,
 float4x4    _CustomShadowMatrix;
 static float2 poissonDisk[32] = 
 {
@@ -269,27 +270,51 @@ real SampleShadowmapFilteredHighQuality(TEXTURE2D_SHADOW_PARAM(ShadowMap, sample
                 + fetchesWeights[15] * SAMPLE_TEXTURE2D_SHADOW(ShadowMap, sampler_ShadowMap, float3(fetchesUV[15].xy, shadowCoord.z));
 }
 
-real SampleShadowmapCustomFiltered(TEXTURE2D_SHADOW_PARAM(ShadowMap, sampler_ShadowMap), float4 shadowCoord)
+real SampleShadowmapCustomFiltered(TEXTURE2D_PARAM(ShadowMap, sampler_ShadowMap), float4 shadowCoord)
 {
     real attenuation;
     float PCFshadow = 0 ;
     float cnt = 0 ;
+    float thickness = 0.0;
 
-    for(int ns = 0; ns < 7;++ns)
+    for(int ns = 0; ns < 32;++ns)
     {
-      float2 Offset = _CustomShadowTexture_TexelSize.xy*poissonDisk[ns];
-      PCFshadow += SAMPLE_TEXTURE2D_SHADOW(ShadowMap, sampler_ShadowMap,shadowCoord.xyz+float3(Offset,0.0));
+      float2 Offset = _CustomShadowTexture_TexelSize.xy*poissonDisk[ns]*_CustomShadowCasterParams.x;
+      float shadowMapZ = SAMPLE_TEXTURE2D(ShadowMap, sampler_ShadowMap,shadowCoord.xy + Offset);
+      PCFshadow += shadowMapZ < shadowCoord.z ? 0.0 : 1.0;
+      thickness += abs(shadowMapZ - shadowCoord.z);
       cnt += 1.0;
     }
     half4 shadowParams = GetMainLightShadowParams();
     half shadowStrength = shadowParams.x;
     attenuation =  PCFshadow/cnt;
-    //return  SAMPLE_TEXTURE2D_SHADOW(ShadowMap, sampler_ShadowMap,shadowCoord.xyz);
     attenuation = LerpWhiteTo(attenuation, shadowStrength);
-
-    // Shadow coords that fall out of the light frustum volume must always return attenuation 1.0
-    // TODO: We could use branch here to save some perf on some platforms.
     return BEYOND_SHADOW_FAR(shadowCoord) ? 1.0 : attenuation;
+}
+
+// 
+void SampleShadowmapCustomFilteredAndEvaluateThickness(TEXTURE2D_PARAM(ShadowMap, sampler_ShadowMap), float4 shadowCoord,float3 normalWS,out float attenuation,out float thickness)
+{
+    float PCFshadow = 0 ;
+    float cnt = 0 ;
+    thickness = 0.0;
+    attenuation = 0.0;
+
+    for(int ns = 0; ns < 32;++ns)
+    {
+      float2 Offset = _CustomShadowTexture_TexelSize.xy*poissonDisk[ns]*_CustomShadowCasterParams.x;
+      float shadowMapZ = SAMPLE_TEXTURE2D(ShadowMap, sampler_ShadowMap,shadowCoord.xy + Offset);
+      PCFshadow += shadowMapZ < shadowCoord.z ? 0.0 : 1.0;
+      thickness += abs(shadowMapZ - shadowCoord.z);
+      cnt += 1.0;
+    }
+    half4 shadowParams = GetMainLightShadowParams();
+    half shadowStrength = shadowParams.x;
+    attenuation =  PCFshadow/cnt;
+    attenuation = LerpWhiteTo(attenuation, shadowStrength);
+    BEYOND_SHADOW_FAR(shadowCoord) ? 1.0 : attenuation;
+    //attenuation = 0.0;
+    thickness = thickness/cnt;
 }
 
 real SampleShadowmapFiltered(TEXTURE2D_SHADOW_PARAM(ShadowMap, sampler_ShadowMap), float4 shadowCoord, ShadowSamplingData samplingData)
@@ -375,6 +400,7 @@ float4 TransformWorldToShadowCoord(float3 positionWS)
 
 #ifdef _CUSTOM_SHADOW
     float4 shadowCoord = mul(_CustomShadowMatrix,half4(positionWS,1.0));
+    return shadowCoord;
 #else
     float4 shadowCoord = mul(_MainLightWorldToShadow[cascadeIndex], float4(positionWS, 1.0));
 #endif
@@ -389,14 +415,20 @@ half MainLightRealtimeShadow(float4 shadowCoord)
         return SampleScreenSpaceShadowmap(shadowCoord);
     // custom shadow 
     #elif defined(_CUSTOM_SHADOW)
-        half4 shadowParams =  _CustomShadowParams;
+        half4 shadowParams =  _CustomShadowCasterParams;
         shadowCoord.xyz = (shadowCoord.xyz/shadowCoord.w)*0.5+0.5;
-        return SampleShadowmapCustomFiltered(TEXTURE2D_ARGS(_CustomShadowTexture, sampler_LinearClampCompare), shadowCoord);
+        return SampleShadowmapCustomFiltered(TEXTURE2D_ARGS(_CustomShadowTexture, sampler_CustomShadowTexture), shadowCoord).x;
     #else 
         ShadowSamplingData shadowSamplingData = GetMainLightShadowSamplingData();
         half4 shadowParams = GetMainLightShadowParams();
         return SampleShadowmap(TEXTURE2D_ARGS(_MainLightShadowmapTexture, sampler_LinearClampCompare), shadowCoord, shadowSamplingData, shadowParams, false);
     #endif
+}
+
+// 
+void MainLightRealtimeShadowAndThickness(float4 shadowCoord,float3 normalWS,out float attenuation,out float thickness)
+{
+    SampleShadowmapCustomFilteredAndEvaluateThickness(TEXTURE2D_ARGS(_CustomShadowTexture, sampler_CustomShadowTexture),shadowCoord,normalWS,attenuation,thickness);
 }
 
 // returns 0.0 if position is in light's shadow

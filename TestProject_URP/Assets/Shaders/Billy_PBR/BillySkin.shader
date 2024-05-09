@@ -25,13 +25,8 @@ Shader "Billy/Skin"
         _ShadowBrdfLUT("Shadow BrdfLUT",2D) = "white"{}
         _SkinToneScale("Skin Tone Scale",Range(0,1)) = 0.0
         _SkinSecondSpecScale("Skin Second Spec Scale",Range(0,1)) = 0.0
-        _TranslucencyViewDependency("Translucency View Dependency",float) = 0.0
-        _TranslucencyThreshold("Translucency Threshold",float) = 0.0
-        _TranslucencyScale("Translucency Scale",float) = 0.0
-        _TranslucencyColor("Translucency Color",COLOR) = (0.5,0.5,0.5,1.0)
-        _fakeAmbientIntensity("Fake Ambient Intensity",float) = 1.0
-        _fakeAmbientColor ("Fake Ambient Color",COLOR) = (0.5,0.5,0.5,1.0)
-        _DeepScatterFalloff("Deep Scatter Falloff",float) = 1.0
+        _CurvatureScaleBias("_CurvatureScaleBias",float) = (1.0,0.0,0.0,0.0) 
+        _ShadowScaleBias("_ShadowScaleBias",float) = (1.0,0.0,0.0,0.0) 
 
 
         [Toggle(_ALPHACLIP_ENABLED)] _AlphaClipEnabled("Dither Enabled",Float) = 0.0
@@ -75,7 +70,10 @@ Shader "Billy/Skin"
             #pragma shader_feature_local _ _ALPHACLIP_ENABLED
             #pragma multi_compile_fragment _ _SHADOWS_SOFT
             #pragma multi_compile _ _ADDITIONAL_LIGHTS
-            #pragma multi_compile_fragment _ _CSTUOM_SHADOW
+            #pragma multi_compile_fragment _ _CUSTOM_SHADOW _CUSTOM_THICKNESS
+
+            #define _CUSTOM_THICKNESS 1
+
             #include "BillySkinForwardPass.hlsl"
             #include "BillySkinInput.hlsl"
 
@@ -96,7 +94,6 @@ Shader "Billy/Skin"
             HLSLPROGRAM
             #pragma multi_compile_fragment _ LOD_FADE_CROSSFADE
             #pragma shader_feature_local _ALPHATEST_ON
-            #pragma shader_feature _UNIQUE_SHADOW
             // This is used during shadow map generation to differentiate between directional and punctual light shadows, as they use different formulas to apply Normal Bias
             #pragma multi_compile_vertex _ _CASTING_PUNCTUAL_LIGHT_SHADOW
             #pragma vertex ShadowPassVertex
