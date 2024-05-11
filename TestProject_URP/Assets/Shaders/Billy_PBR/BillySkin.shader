@@ -27,7 +27,11 @@ Shader "Billy/Skin"
         _SkinSecondSpecScale("Skin Second Spec Scale",Range(0,1)) = 0.0
         _CurvatureScaleBias("_CurvatureScaleBias",float) = (1.0,0.0,0.0,0.0) 
         _ShadowScaleBias("_ShadowScaleBias",float) = (1.0,0.0,0.0,0.0) 
+        _DeepScale("DeepScale",float) = 1.0
+        _DeepScatterFalloff("_DeepScatterFalloff",float) = 1.0
+        _TranslucencyColor("_TranslucencyColor",COLOR) = (0.5,0.5,0.5,1.0)
 
+        _CurvatureFactore("_CurvatureFactore",float) = 1.0
 
         [Toggle(_ALPHACLIP_ENABLED)] _AlphaClipEnabled("Dither Enabled",Float) = 0.0
         [Toggle(_DITHER_ENABLED)] _DitherEnabled("Dither Enabled",Float) = 0.0
@@ -55,6 +59,7 @@ Shader "Billy/Skin"
         Pass
         {
             HLSLPROGRAM
+            #pragma target 3.0
             #pragma vertex PBRPassVertex
             #pragma fragment PBRPassFragment
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _MAIN_LIGHT_SHADOWS_SCREEN

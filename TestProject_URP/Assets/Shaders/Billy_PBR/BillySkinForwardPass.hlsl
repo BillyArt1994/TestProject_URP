@@ -22,7 +22,6 @@ struct Varyings
     float3 viewDirWS     : TEXCOORD5;
     float4 shadowCoord   : TEXCOORD6;
     float4 positionCS    : SV_POSITION;
-    float4 shadowPos : TEXCOORD7;
     float4 screenPos : TEXCOORD8;
 };
 
@@ -62,7 +61,11 @@ float4 PBRPassFragment (Varyings input) : SV_Target
     emissive = 1.0;
     #endif
      
-    float curvature = SAMPLE_TEXTURE2D(_Curvature,sampler_Curvature,input.uv).r;
+    float deltaWorldNormal = fwidth(input.normalWS);// length(abs(ddx(normalInput.normalWS))+abs(ddy(normalInput.normalWS)));
+    float deltaWorldPos = fwidth(input.positionWS);// length(abs(ddx(vertexInput.positionWS))+abs(ddy(vertexInput.positionWS)));
+
+    float curvature = 1.0;//(deltaWorldNormal/deltaWorldPos) * 0.01*_CurvatureFactore;//SAMPLE_TEXTURE2D(_Curvature,sampler_Curvature,input.uv).r;
+    //return curvature;
     float thickness = 1.0 - SAMPLE_TEXTURE2D(_Thickness,sampler_Thickness,input.uv).r;
 
     BillyBRDFData brdfData = (BillyBRDFData)0;

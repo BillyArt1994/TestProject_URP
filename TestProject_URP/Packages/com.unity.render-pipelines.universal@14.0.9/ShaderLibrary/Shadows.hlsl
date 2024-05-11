@@ -308,28 +308,24 @@ void SampleShadowmapCustomFilteredAndEvaluateThickness(TEXTURE2D_PARAM(ShadowMap
       float2 Offset = _CustomShadowTexture_TexelSize.xy*poissonDisk[ns]*_CustomShadowCasterParams.x;
       float shadowMapZ = SAMPLE_TEXTURE2D(ShadowMap, sampler_ShadowMap,shadowCoord.xy + Offset);
       
-      if (ns == 0) shadowMapFrist = shadowMapZ;
-      
+      if (ns == 0) shadowMapFrist = shadowMapZ;  
       float invNdotL = 1.0 - saturate(dot(lightDir, normalWS));
       float scale = invNdotL * _ShadowBias.y;
   
       // normal bias is negative since we want to apply an inset normal offset
       shadowZBias = lightDir * _ShadowBias.xxx + shadowCoord.z;
       shadowZBias = normalWS * scale.xxx + shadowCoord.z;
-
       PCFshadow += shadowMapZ < shadowZBias ? 0.0 : 1.0;
-      //thickness += abs(shadowMapZ - shadowCoord.z);
+      thickness += max(shadowCoord.z -shadowMapZ,0.0);
       cnt += 1.0;
     }
     
     half4 shadowParams = GetMainLightShadowParams();
     half shadowStrength = shadowParams.x;
     attenuation =  PCFshadow/cnt;
-    //attenuation= SAMPLE_TEXTURE2D(ShadowMap, sampler_ShadowMap,shadowCoord.xy);
     attenuation = LerpWhiteTo(attenuation, shadowStrength);
     attenuation = BEYOND_SHADOW_FAR(shadowCoord) ? 1.0 : attenuation;
-    //attenuation = 0.0;
-    thickness = abs(shadowMapFrist - shadowCoord.z);
+    thickness = thickness/cnt;
 }
 
 real SampleShadowmapFiltered(TEXTURE2D_SHADOW_PARAM(ShadowMap, sampler_ShadowMap), float4 shadowCoord, ShadowSamplingData samplingData)

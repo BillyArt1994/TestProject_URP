@@ -14,6 +14,8 @@ Material:
   m_ValidKeywords:
   - DIRECTDIFFUSE
   - DIRECTSPECULAR
+  - INDIRECTDIFFUSE
+  - INDIRECTSPECULAR
   - _IBLBRDFMODE_PRE_INTEGRATION
   m_InvalidKeywords: []
   m_LightmapFlags: 4
@@ -145,8 +147,9 @@ Material:
     - _ClearCoatSmoothness: 0
     - _Cull: 2
     - _CullMode: 2
-    - _Cutoff: 0.5
-    - _DeepScatterFalloff: 1
+    - _Cutoff: 0
+    - _DeepScale: -6.6
+    - _DeepScatterFalloff: -30.18
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
     - _DirectDiffuse: 1
@@ -160,8 +163,8 @@ Material:
     - _GlossyReflections: 0
     - _HorizonFade: 0.25
     - _IBLBrdfMode: 1
-    - _IndirectDiffuse: 0
-    - _IndirectSpecular: 0
+    - _IndirectDiffuse: 1
+    - _IndirectSpecular: 1
     - _MRAEMapEnabled: 0
     - _Metalic: 0
     - _Metallic: 0
@@ -171,8 +174,8 @@ Material:
     - _ReceiveShadows: 1
     - _Reflectivity: 0.5
     - _Roughness: 0.523
-    - _SkinSecondSpecScale: 0
-    - _SkinToneScale: 0
+    - _SkinSecondSpecScale: 0.251
+    - _SkinToneScale: 0.356
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
@@ -188,12 +191,12 @@ Material:
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _CurvatureScaleBias: {r: 0.12, g: 0.29, b: 0, a: 0}
+    - _CurvatureScaleBias: {r: 0.34, g: 0.39, b: 1.71, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _ShadowScaleBias: {r: 0, g: 0, b: 0, a: 0}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
     - _Tint: {r: 1, g: 1, b: 1, a: 0.46666667}
-    - _TranslucencyColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+    - _TranslucencyColor: {r: 0.41509432, g: 0.0019579967, b: 0.048888616, a: 1}
     - _fakeAmbientColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   m_BuildTextureStacks: []
 --- !u!114 &7720503423236103475
