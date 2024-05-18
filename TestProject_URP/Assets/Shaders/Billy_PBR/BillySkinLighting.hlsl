@@ -9,7 +9,6 @@
     float3 Billy_Skin_Lighting(BillyBRDFData brdfData,float3 normal,float3 viewDir,float curvature,float thickness,float3 vertexNormal,Light light)
     {
         half shadow = max(light.shadowAttenuation,0.0);
-        return thickness;
         float3 halfDir = normalize(light.direction+viewDir);
         float3 reflDir = reflect(-viewDir, normal);
         float NdotLRaw = dot(normal,light.direction);
@@ -44,8 +43,6 @@
         float minusNDotL = -dot(NdotL_low, light.direction);
         transmittance *= saturate(minusNDotL + 0.3);
 
-        //return transmittance*_TranslucencyColor;
-        
         half3 rgbShadow = SAMPLE_TEXTURE2D(_ShadowBrdfLUT,sampler_ShadowBrdfLUT,half2(shadow,NdotL_low*_ShadowScaleBias.x+_ShadowScaleBias.y));
         float3 kd = (1-F);
 
@@ -61,7 +58,7 @@
         float3 irradianceEnv = DecodeHDREnvironment(encodedIrradiance, unity_SpecCube0_HDR);
         irradianceEnv *= HorizonOcclusion(reflDir,normal,vertexNormal,_HorizonFade)*specularAO;   
         float3 irKs = fresnelSchlickRoughness(NdotV,brdfData.reflectivity,brdfData.roughness);
-        //return irKs;
+
         float3 irKd = (1.0 - irKs);
 
         #ifdef _IBLBRDFMODE_UE4_BRDFAPPROX

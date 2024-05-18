@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: CustomShadow
   m_EditorClassIdentifier: 
   m_Active: 1
-  m_event: 50
+  m_event: 150
   m_layerMask:
     serializedVersion: 2
     m_Bits: 4294967295

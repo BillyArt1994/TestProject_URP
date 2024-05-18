@@ -9,6 +9,7 @@
     float4 Billy_PBS_Lighting (BillyBRDFData brdfData,float3 normal,float3 viewDir,float3 vertexNormal,Light light)
 	{
         half shadow = max(light.shadowAttenuation,0.0);
+        //return shadow;
         float3 halfDir = normalize(light.direction+viewDir);
         float3 reflDir = reflect(-viewDir, normal);
         float NdotL = saturate(dot(normal, light.direction));
