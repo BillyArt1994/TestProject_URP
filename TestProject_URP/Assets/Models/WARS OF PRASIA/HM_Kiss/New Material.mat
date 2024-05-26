@@ -153,7 +153,7 @@ Material:
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
-    - _HorizonFade: 0.2
+    - _HorizonFade: 0.25
     - _IBLBrdfMode: 1
     - _IndirectDiffuse: 1
     - _IndirectSpecular: 1

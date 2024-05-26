@@ -43,6 +43,7 @@ Shader "Billy/Skin"
         [Toggle(DIRECTSPECULAR)] _DirectSpecular ("Direct Lighting Specular",float) = 1.0
         [Toggle(INDIRECTDIFFUSE)] _IndirectDiffuse ("Indirect Lighting Diffuse",float) = 1.0
         [Toggle(INDIRECTSPECULAR)] _IndirectSpecular ("Indirect Lighting Specular",float) = 1.0
+        [Toggle(THICKNESS)] _THICKNESS ("Thickness",float) = 1.0
     }
     SubShader
     {
@@ -69,6 +70,7 @@ Shader "Billy/Skin"
             #pragma shader_feature DIRECTSPECULAR
             #pragma shader_feature INDIRECTDIFFUSE
             #pragma shader_feature INDIRECTSPECULAR
+            #pragma shader_feature THICKNESS
             #pragma multi_compile  _IBLBRDFMODE_UE4_BRDFAPPROX _IBLBRDFMODE_PRE_INTEGRATION
             #pragma shader_feature_local _ _MRAE_MAP_ENABLED
             #pragma shader_feature_local _ _DITHER_ENABLED

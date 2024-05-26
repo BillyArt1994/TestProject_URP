@@ -39,6 +39,9 @@
         half3 diffuseBrdf = SAMPLE_TEXTURE2D(_SkinBrdfLUT,sampler_SkinBrdfLUT,half2(NdotL_low*0.5+0.5,curvatureScaled));
 
         thickness *=_DeepScale;
+        #if defined(THICKNESS)
+        return thickness ;
+        #endif
         float transmittance = exp2(_DeepScatterFalloff * thickness * thickness);
         float minusNDotL = -dot(NdotL_low, light.direction);
         transmittance *= saturate(minusNDotL + 0.3);

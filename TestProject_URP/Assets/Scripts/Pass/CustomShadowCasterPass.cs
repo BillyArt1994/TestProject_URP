@@ -89,7 +89,7 @@ public class CustomShadowCasterPass : ScriptableRenderPass
         }
 
         // Set shadowmap`
-        CoreUtils.SetKeyword(cmd, CUSTOM_SHADOW_KW, true);
+       // CoreUtils.SetKeyword(cmd, CUSTOM_SHADOW_KW, true);
         cmd.SetGlobalTexture(CustomShadowConstantBuffer._CustomShadowTexture, m_customshadowmap.rt);
         cmd.SetGlobalMatrix(CustomShadowConstantBuffer._CustomShadowMatrix, m_ProjectionMatrix*m_WorldToCameraMatrix);
         context.ExecuteCommandBuffer(cmd);

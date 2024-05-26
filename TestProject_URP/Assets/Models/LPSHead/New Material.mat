@@ -147,9 +147,10 @@ Material:
     - _ClearCoatSmoothness: 0
     - _Cull: 2
     - _CullMode: 2
+    - _CurvatureFactore: 1
     - _Cutoff: 0
-    - _DeepScale: -6.6
-    - _DeepScatterFalloff: -30.18
+    - _DeepScale: 1
+    - _DeepScatterFalloff: 1
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
     - _DirectDiffuse: 1
@@ -175,13 +176,14 @@ Material:
     - _Reflectivity: 0.5
     - _Roughness: 0.523
     - _SkinSecondSpecScale: 0.251
-    - _SkinToneScale: 0.356
+    - _SkinToneScale: 0.167
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
     - _Surface: 0
+    - _THICKNESS: 0
     - _TranslucencyScale: 0
     - _TranslucencyThreshold: -16.57
     - _TranslucencyViewDependency: 0
@@ -191,7 +193,7 @@ Material:
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _CurvatureScaleBias: {r: 0.34, g: 0.39, b: 1.71, a: 0}
+    - _CurvatureScaleBias: {r: -2.49, g: -33.56, b: -3.24, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _ShadowScaleBias: {r: 0, g: 0, b: 0, a: 0}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}

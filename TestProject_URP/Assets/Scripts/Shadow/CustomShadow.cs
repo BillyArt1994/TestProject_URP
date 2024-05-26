@@ -10,22 +10,22 @@ using static UnityEngine.GraphicsBuffer;
 using static UnityEngine.Rendering.DebugUI.Table;
 
 [ExecuteInEditMode]
-//[RequireComponent(typeof(Camera), typeof(UniversalAdditionalCameraData))]
 public class CustomShadow : MonoBehaviour
 {
     public TexSize m_shadowMapSize = TexSize._1024;
     public Transform m_target;
+    private Transform m_targetTemp;
     public Vector3 m_offest;
     public Light m_light;
     public float m_radius = 1f;
     public float m_sceneCaptureDistance = 4f;
-    [Range(0.0f,5.0f)]
+    [Range(0.0f, 5.0f)]
     public float m_depthBias = 0.1f;
     [Range(0.0f, 5.0f)]
     public float m_filterScale = 1.0f;
     CustomShadowCasterFeature m_customShadow;
     private bool dirty = true;
-
+    const string CUSTOM_SHADOW_KW = "_CUSTOM_SHADOW";
     public static CustomShadow m_Instance;
 
     public enum TexSize
@@ -44,41 +44,57 @@ public class CustomShadow : MonoBehaviour
         m_Instance = this;
     }
 
+
     private void Awake()
     {
         m_customShadow = CustomShadowCasterFeature.m_Instance;
+
         if (m_light != null)
         {
-            if (m_light.gameObject.GetComponent<CustomShadowCasterFeature>() == null) 
+            if (m_light.gameObject.GetComponent<CustomShadowLightHelper>() == null)
             {
                 m_light.gameObject.AddComponent<CustomShadowLightHelper>();
             }
         }
-            
-        //m_customShadow.Init(1024, 1024);
-        SetFocus();
+        //SetFocus();
     }
+
 
     void OnEnable()
     {
+        m_customShadow = CustomShadowCasterFeature.m_Instance;
         if (m_target == null)
         {
-            //target = this.transform;
+            SetKeyWord(m_target, CUSTOM_SHADOW_KW, true);
         }
-
+        
         m_customShadow.Init((int)m_shadowMapSize, (int)m_shadowMapSize);
+        SetFocus();
+        Debug.Log("OnEnable");
     }
 
     void OnValidate()
     {
+        if (!this.enabled || m_customShadow == null) return;
         SetFocus();
-        SetShadowBias();
         m_customShadow.Init((int)m_shadowMapSize, (int)m_shadowMapSize);
-       // Shader.SetGlobalVector("_CustomShadowParams", new Vector4(m_depthBias, 0.0f, 0.0f, 0.0f));
+        if (m_target != null && m_target != m_targetTemp)
+        {
+            SetKeyWord(m_target, CUSTOM_SHADOW_KW, true);
+            var mats = m_target.GetComponentInChildren<MeshRenderer>().sharedMaterials;
+            //foreach (var mat in mats)
+            //{
+            //    var kwE = mat.shaderKeywords;
+            //    foreach (var kk in kwE)  Debug.Log(kk);
+            //}
+            SetKeyWord(m_targetTemp, CUSTOM_SHADOW_KW, false);
+            m_targetTemp = m_target;
+        }
     }
 
     public void SetFocus()
     {
+        if (m_customShadow == null) return;
         m_customShadow.Projection(m_radius, m_sceneCaptureDistance, m_depthBias);
         CheckVisibility(m_light);
     }
@@ -92,7 +108,7 @@ public class CustomShadow : MonoBehaviour
            + m_target.up * m_offest.y
            + m_target.forward * m_offest.z;
 
-        var pos = targetPoint_pos - light.transform.forward * m_radius ;
+        var pos = targetPoint_pos - light.transform.forward * m_radius;
         var rot = light.transform.rotation;
 
         transform.position = pos;
@@ -113,63 +129,50 @@ public class CustomShadow : MonoBehaviour
         Gizmos.DrawWireSphere(pos, m_radius);
 
         Gizmos.color = Color.gray;
-        
-        var localToWorldInvZM = transform.localToWorldMatrix* Matrix4x4.Scale(new Vector3(1.0f, 1.0f, -1.0f));
+
+        var localToWorldInvZM = transform.localToWorldMatrix * Matrix4x4.Scale(new Vector3(1.0f, 1.0f, -1.0f));
         Gizmos.matrix = localToWorldInvZM;
 
         Vector3 center = new Vector3(0, 0, -m_radius);
         Vector3 size = Vector3.one * m_radius * 2;
-        center.z += -m_sceneCaptureDistance*0.5f;
+        center.z += -m_sceneCaptureDistance * 0.5f;
         size.z += m_sceneCaptureDistance;
         Gizmos.DrawWireCube(center, size);
     }
 
-    //private void OnDrawGizmos()
-    //{
-    //            if (m_target == null)
-    //        return;
-    //    Gizmos.color = Color.cyan;
-    //    var pos = m_target.position
-    //               + m_target.right * m_offest.x
-    //               + m_target.up * m_offest.y
-    //               + m_target.forward * m_offest.z;
-    //    Gizmos.DrawWireSphere(pos, m_radius);
-    //
-    //    Gizmos.color = Color.gray;
-    //    
-    //    var localToWorldInvZM = transform.localToWorldMatrix* Matrix4x4.Scale(new Vector3(1.0f, 1.0f, -1.0f));
-    //    Gizmos.matrix = localToWorldInvZM;
-    //
-    //    Vector3 center = new Vector3(0, 0, -m_radius);
-    //    Vector3 size = Vector3.one * m_radius * 2;
-    //    center.z += -m_sceneCaptureDistance*0.5f;
-    //    size.z += m_sceneCaptureDistance;
-    //    Gizmos.DrawWireCube(center, size);
-    //}
-
-    //[ContextMenu("My Func")]
-    //void Print()
-    //{
-    //
-    //
-    //    var targetPoint_pos = m_target.position
-    //        + m_target.right * m_offest.x
-    //        + m_target.up * m_offest.y
-    //        + m_target.forward * m_offest.z;
-    //
-    //    var pos = transform.position;//targetPoint_pos - m_light.transform.forward * (m_radius + m_sceneCaptureDistance);
-    //    var rot = transform.rotation;//m_light.transform.rotation;
-    //    print("视口矩阵"+Matrix4x4.TRS(pos, rot, Vector3.one).inverse);
-    //
-    //    float nearClipPlane = 0f;
-    //    float farClipPlane = m_radius * 2f + m_sceneCaptureDistance;
-    //    print("投影矩阵"+Matrix4x4.Ortho(-m_radius, m_radius, -m_radius, m_radius, nearClipPlane, farClipPlane));
-    //}
-
-    void SetShadowBias()
+    private void OnDisable()
     {
-        Shader.SetGlobalFloat("_CustomShadowBias", m_depthBias);
-        Shader.SetGlobalFloat("_CustomShadowFilterScale", m_filterScale);
-        
+        if (m_target != null)
+        {
+            SetKeyWord(m_target, CUSTOM_SHADOW_KW, false);
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (m_target != null)
+        {
+            SetKeyWord(m_target, CUSTOM_SHADOW_KW, false);
+        }
+    }
+
+    /// <summary>
+    /// Set KeyWord Form input Transform include all childer node
+    /// </summary>
+    /// <param name=""></param>
+    void SetKeyWord(Transform transf, string keyWord, bool flag)
+    {
+        var mats = m_target.GetComponentInChildren<MeshRenderer>().sharedMaterials;
+        foreach (var mat in mats)
+        {
+            if (flag)
+            {
+                mat.EnableKeyword(CUSTOM_SHADOW_KW);
+            }
+            else
+            {
+                mat.DisableKeyword(CUSTOM_SHADOW_KW);
+            }
+        }
     }
 }

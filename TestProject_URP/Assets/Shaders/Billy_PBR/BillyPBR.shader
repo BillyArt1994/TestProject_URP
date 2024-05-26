@@ -66,7 +66,7 @@
             #pragma shader_feature_local _ _ALPHACLIP_ENABLED
             #pragma multi_compile_fragment _ _SHADOWS_SOFT
             #pragma multi_compile _ _ADDITIONAL_LIGHTS
-            #pragma multi_compile_fragment _ _CUSTOM_SHADOW
+            #pragma multi_compile_local_fragment _ _CUSTOM_SHADOW
 
             #include "BillyPBRForwardPass.hlsl"
 
@@ -92,7 +92,7 @@
             #pragma shader_feature _UNIQUE_SHADOW
             // This is used during shadow map generation to differentiate between directional and punctual light shadows, as they use different formulas to apply Normal Bias
             #pragma multi_compile_vertex _ _CASTING_PUNCTUAL_LIGHT_SHADOW
-            #pragma multi_compile_vertex _ _CSTUOM_SHADOW
+            #pragma multi_compile_local_vertex _ _CUSTOM_SHADOW
             #pragma vertex ShadowPassVertex
             #pragma fragment ShadowPassFragment
 
@@ -125,8 +125,6 @@
 
             // Includes
             #include "BillyDepthOnlyPass.hlsl"
-            //#include "Packages/com.unity.render-pipelines.universal/Shaders/LitInput.hlsl"
-            //#include "Packages/com.unity.render-pipelines.universal/Shaders/DepthOnlyPass.hlsl"
             ENDHLSL
         }
     }
