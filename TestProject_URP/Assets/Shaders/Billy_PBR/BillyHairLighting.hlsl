@@ -222,7 +222,7 @@
 
         float3 col = 0.0.xxx;
         col += directdiffuse+ directspecular;
-        col *=light.color* Shadow;
+        col *= light.color * Shadow;
 
         //#ifdef DIRECTDIFFUSE
         //col += directdiffuse;

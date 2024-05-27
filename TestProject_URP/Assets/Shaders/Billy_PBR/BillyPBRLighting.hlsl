@@ -58,9 +58,6 @@
         #ifdef INDIRECTSPECULAR 
         col += indirectSpecular;
         #endif  
-        #ifdef _CHECKVALUE
-        col = CheckColorValue(col, _ChkTargetValue, _ChkTargetScale, _ChkRange);
-        #endif
         return float4(col,1.0);
     }
 
@@ -90,7 +87,8 @@
         #endif 
         #ifdef DIRECTSPECULAR 
         col += directspecular;
-        #endif  
+        #endif
+
         return col;
     }
 

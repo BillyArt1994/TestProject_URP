@@ -63,7 +63,7 @@ public class CustomShadow : MonoBehaviour
     void OnEnable()
     {
         m_customShadow = CustomShadowCasterFeature.m_Instance;
-        if (m_target == null)
+        if (m_target != null)
         {
             SetKeyWord(m_target, CUSTOM_SHADOW_KW, true);
         }

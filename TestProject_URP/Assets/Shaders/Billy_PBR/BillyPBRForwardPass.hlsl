@@ -93,6 +93,11 @@ float4 PBRPassFragment (Varyings input) : SV_Target
     #endif
     col.xyz += additionalLightsSumResult;
 
+
+    #ifdef _CHECKVALUE
+    col.xyz = CheckColorValue(col.xyz, _ChkTargetValue, _ChkTargetScale, _ChkRange);
+    #endif
+
     #if _ALPHACLIP_ENABLED
         #ifdef _DITHER_ENABLED
         float2 screen_uv = input.screenPos.xy/input.screenPos.w;
