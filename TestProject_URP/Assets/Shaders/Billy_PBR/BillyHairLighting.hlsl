@@ -96,6 +96,8 @@
             float Luma = Luminance(SpecularColor);
             float3 ScatterTint = pow(SpecularColor / Luma, 1-Shadow);
             directdiffuse = sqrt(SpecularColor) * DiffuseScatter * ScatterTint;
+
+           
         }
         #endif
 
@@ -197,7 +199,7 @@
             float h = CosHalfPhi * (1 + a * (0.6 - 0.8 * CosPhi));
             float f = Hair_F(CosThetaD * sqrt(saturate( 1 - h*h)));
             float Fp = pow2(1 - f);
-            float3 Tp = pow(SpecularColor, 0.5 * sqrt(1 - pow2(h * a)) / CosThetaD);
+            float3 Tp = pow(_SecSpecCol, 0.5 * sqrt(1 - pow2(h * a)) / CosThetaD);
             float Np = exp(-3.65 * CosPhi - 3.98);
             directspecular += Mp * Np * Fp * Tp * Backlit;
         }
@@ -216,6 +218,9 @@
             float Luma = Luminance(SpecularColor);
             float3 ScatterTint = pow(SpecularColor / Luma, 1-Shadow);
             directdiffuse = sqrt(SpecularColor) * DiffuseScatter * ScatterTint;
+            //dot(N, L);
+            return KajiyaDiffuse;//
+            
         }
         #endif
 
@@ -223,13 +228,6 @@
         float3 col = 0.0.xxx;
         col += directdiffuse+ directspecular;
         col *= light.color * Shadow;
-
-        //#ifdef DIRECTDIFFUSE
-        //col += directdiffuse;
-        //#endif 
-        //#ifdef DIRECTSPECULAR 
-        //col += directspecular;
-        //#endif  
         return col;
     }
 

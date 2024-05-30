@@ -26,6 +26,8 @@ struct Varyings
     float4 BtangentWS    : TEXCOORD4;
     float3 viewDirWS     : TEXCOORD5;
     float4 shadowCoord   : TEXCOORD6;
+    float4 tangentOS   : TEXCOORD8;
+    float3 bitangentOS   : TEXCOORD9;
     float4 positionCS    : SV_POSITION;
 };
 
@@ -37,6 +39,9 @@ Varyings vertex (Attributes input)
     VertexNormalInputs normalInput = GetVertexNormalInputs(input.normalOS,input.tangentOS);
     output.normalWS.xyz = normalInput.normalWS;
     output.tangentWS.xyz = normalInput.tangentWS;
+    output.tangentOS = input.tangentOS;
+    real sign = real(input.tangentOS.w) * GetOddNegativeScale();
+    output.bitangentOS = real3(cross(input.normalOS.xyz, float3(input.tangentOS.xyz))) * sign;
     output.BtangentWS.xyz = normalInput.bitangentWS;
     output.positionWS = vertexInput.positionWS;
     output.viewDirWS = GetCameraPositionWS() - vertexInput.positionWS;
@@ -46,7 +51,7 @@ Varyings vertex (Attributes input)
     return output;
 }
 
-float4 frag (Varyings input) : SV_Target
+float4 frag (Varyings input , half face : VFACE) : SV_Target
 {
     Light mainlight = GetMainLight(input.shadowCoord);
     float4 albedo = tex2Dlod(_Albedo,float4(input.uv,0.0,1));
@@ -62,9 +67,11 @@ float4 frag (Varyings input) : SV_Target
     float4 flowMap2 = tex2D(_TangentTex,uv.zw);
     float t1 = (flowMap1.z *2.0 -1.0)*_SpecularNoiseIntensity;
     float t2 = flowMap2.z *2.0 -1.0;
-    float3 T = normalize(flowMap0.xyz *2.0 -1.0);
+    half faceFlag = face == 0 ? -1: 1;
+    //return half4(input.tangentOS.xyz,1.0);
+    float3 T =  normalize(flowMap0.xyz *2.0 -1.0) ;
     T.z = 0.0; 
-   // return T.xyzz;
+    //return T.xyzz;
 
     float3 V = float3(dot(input.viewDirWS,input.tangentWS.xyz),dot(input.viewDirWS,input.BtangentWS.xyz),dot(input.viewDirWS,input.normalWS.xyz));
     V = normalize(V);
