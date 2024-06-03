@@ -95,13 +95,6 @@ public class LookDevWindow : EditorWindow
         }
     }
 
-    //private void OnFocus()
-    //{
-    //    SceneView.duringSceneGui 
-    //}
-
-
-
     void UpdateEnviormentLight()
     {
         DynamicGI.UpdateEnvironment();
