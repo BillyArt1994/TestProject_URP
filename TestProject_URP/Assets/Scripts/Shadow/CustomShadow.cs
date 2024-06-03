@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
@@ -67,7 +68,7 @@ public class CustomShadow : MonoBehaviour
         {
             SetKeyWord(m_target, CUSTOM_SHADOW_KW, true);
         }
-        
+
         m_customShadow.Init((int)m_shadowMapSize, (int)m_shadowMapSize);
         SetFocus();
         Debug.Log("OnEnable");
@@ -81,12 +82,6 @@ public class CustomShadow : MonoBehaviour
         if (m_target != null && m_target != m_targetTemp)
         {
             SetKeyWord(m_target, CUSTOM_SHADOW_KW, true);
-            var mats = m_target.GetComponentInChildren<MeshRenderer>().sharedMaterials;
-            //foreach (var mat in mats)
-            //{
-            //    var kwE = mat.shaderKeywords;
-            //    foreach (var kk in kwE)  Debug.Log(kk);
-            //}
             SetKeyWord(m_targetTemp, CUSTOM_SHADOW_KW, false);
             m_targetTemp = m_target;
         }
@@ -162,16 +157,24 @@ public class CustomShadow : MonoBehaviour
     /// <param name=""></param>
     void SetKeyWord(Transform transf, string keyWord, bool flag)
     {
-        var mats = m_target.GetComponentInChildren<MeshRenderer>().sharedMaterials;
-        foreach (var mat in mats)
+        Renderer[] meshRenders = m_target.GetComponentsInChildren<MeshRenderer>();
+        Renderer[] skinMeshRenders = m_target.GetComponentsInChildren<SkinnedMeshRenderer>();
+        Renderer[] tempMeshRenders = new Renderer[meshRenders.Length+ skinMeshRenders.Length];
+        meshRenders.CopyTo(tempMeshRenders, 0);
+        skinMeshRenders.CopyTo(tempMeshRenders, meshRenders.Length);
+        foreach (var mr in tempMeshRenders)
         {
-            if (flag)
+            var mats = mr.sharedMaterials;
+            foreach (var mat in mats)
             {
-                mat.EnableKeyword(CUSTOM_SHADOW_KW);
-            }
-            else
-            {
-                mat.DisableKeyword(CUSTOM_SHADOW_KW);
+                if (flag)
+                {
+                    mat.EnableKeyword(CUSTOM_SHADOW_KW);
+                }
+                else
+                {
+                    mat.DisableKeyword(CUSTOM_SHADOW_KW);
+                }
             }
         }
     }

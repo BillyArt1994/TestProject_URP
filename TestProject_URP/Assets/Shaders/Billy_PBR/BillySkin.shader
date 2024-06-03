@@ -33,16 +33,16 @@ Shader "Billy/Skin"
 
         _CurvatureFactore("_CurvatureFactore",float) = 1.0
 
-        [Toggle(_ALPHACLIP_ENABLED)] _AlphaClipEnabled("Dither Enabled",Float) = 0.0
+        [Toggle(_ALPHACLIP_ENABLED)] _AlphaClipEnabled("AlphaClip Enabled",Float) = 0.0
         [Toggle(_DITHER_ENABLED)] _DitherEnabled("Dither Enabled",Float) = 0.0
         [Enum(Both, 0, Front, 1, Back, 2)]
         _CullMode ("Cull Mode", Float) = 2
         _Cutoff("Cut Off",Range(0.0,1.0)) = 0.0
         [KeywordEnum(UE4_BRDFApprox,Pre_Integration)] _IBLBrdfMode ("IBL Specular BRDF Mode",float) = 1.0
-        [Toggle(DIRECTDIFFUSE)] _DirectDiffuse ("Direct Lighting Diffuse",float) = 1.0
-        [Toggle(DIRECTSPECULAR)] _DirectSpecular ("Direct Lighting Specular",float) = 1.0
-        [Toggle(INDIRECTDIFFUSE)] _IndirectDiffuse ("Indirect Lighting Diffuse",float) = 1.0
-        [Toggle(INDIRECTSPECULAR)] _IndirectSpecular ("Indirect Lighting Specular",float) = 1.0
+        [Toggle(_DIRECTDIFFUSE_DISPLAYER)] _DirectDiffuse ("Direct Lighting Diffuse",float) = 1.0
+        [Toggle(_DIRECTSPECULAR_DISPLAYER)] _DirectSpecular ("Direct Lighting Specular",float) = 1.0
+        [Toggle(_INDIRECTDIFFUSE_DISPLAYER)] _IndirectDiffuse ("Indirect Lighting Diffuse",float) = 1.0
+        [Toggle(_INDIRECTSPECULAR_DISPLAYER)] _IndirectSpecular ("Indirect Lighting Specular",float) = 1.0
         [Toggle(THICKNESS)] _THICKNESS ("Thickness",float) = 1.0
     }
     SubShader
@@ -66,10 +66,10 @@ Shader "Billy/Skin"
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _MAIN_LIGHT_SHADOWS_SCREEN
             #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
             #pragma multi_compile_fragment _ _ADDITIONAL_LIGHT_SHADOWS
-            #pragma shader_feature DIRECTDIFFUSE   
-            #pragma shader_feature DIRECTSPECULAR
-            #pragma shader_feature INDIRECTDIFFUSE
-            #pragma shader_feature INDIRECTSPECULAR
+            #pragma shader_feature _DIRECTDIFFUSE_DISPLAYER   
+            #pragma shader_feature _DIRECTSPECULAR_DISPLAYER
+            #pragma shader_feature _INDIRECTDIFFUSE_DISPLAYER
+            #pragma shader_feature _INDIRECTSPECULAR_DISPLAYER
             #pragma shader_feature THICKNESS
             #pragma multi_compile  _IBLBRDFMODE_UE4_BRDFAPPROX _IBLBRDFMODE_PRE_INTEGRATION
             #pragma shader_feature_local _ _MRAE_MAP_ENABLED

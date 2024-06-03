@@ -1,11 +1,30 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.UIElements;
 
 public class LookDevWindow : EditorWindow
 {
+    [Flags]
+    public enum DisplayerElement
+    {
+        None = 0,
+        Albedo = 1 << 0,
+        Metallic = 1 << 1,
+        Rounghness = 1 << 2,
+        AO = 1 << 3,
+        Normal = 1 << 4,
+        DirectionDiffuse = 1 << 5,
+        DirectionSpecular = 1 << 6,
+        IndirectionDiffuse = 1 << 7,
+        IndirectionSpecular = 1 << 8,
+        Shadow = 1 << 9
+
+    }
+
     public int m_rotate = 0;
     public Material m_skybox;
     public float m_exposure = 1.0f;
@@ -17,6 +36,8 @@ public class LookDevWindow : EditorWindow
     public bool m_turnTableFlag = false;
     public Transform m_turntable;
     public float m_speed = 1.0f;
+    public DisplayerElement m_displayElem;
+
 
     [MenuItem("Window/Look Dev")]
     static void OpenWindow()
@@ -46,6 +67,9 @@ public class LookDevWindow : EditorWindow
         m_turnTableFlag = EditorGUILayout.Toggle("turnTable ? ", m_turnTableFlag);
         m_turntable = (Transform)EditorGUILayout.ObjectField(m_turntable, typeof(Transform), true);
         m_speed = EditorGUILayout.FloatField("ËÙ¶È",m_speed);
+
+        m_displayElem = (DisplayerElement)EditorGUILayout.EnumPopup("Displayer Element", m_displayElem);
+        Debug.Log((int)m_displayElem);
         OnInspectorUpdate();
     }
 
@@ -67,6 +91,7 @@ public class LookDevWindow : EditorWindow
             {
                 SceneView.duringSceneGui -= TurnTable;
             }
+            ViewDisplayElement(m_displayElem);
         }
     }
 
@@ -102,5 +127,19 @@ public class LookDevWindow : EditorWindow
             m_turntable.Rotate(Vector3.up, m_speed * Time.deltaTime, Space.World);
         }
         sceneView.Repaint();
+    }
+
+    void ViewDisplayElement(DisplayerElement elem)
+    {
+        Shader.SetKeyword(GlobalKeyword.Create("_ALBEDO_DISPLAYER"), elem == DisplayerElement.Albedo);
+        Shader.SetKeyword(GlobalKeyword.Create("_METALLIC_DISPLAYER"), elem == DisplayerElement.Metallic);
+        Shader.SetKeyword(GlobalKeyword.Create("_ROUNGHNESS_DISPLAYER"), elem == DisplayerElement.Rounghness);
+        Shader.SetKeyword(GlobalKeyword.Create("_AO_DISPLAYER"), elem == DisplayerElement.AO);
+        Shader.SetKeyword(GlobalKeyword.Create("_NORMAL_DISPLAYER"), elem == DisplayerElement.Normal);
+        Shader.SetKeyword(GlobalKeyword.Create("_SHADOW_DISPLAYER"), elem == DisplayerElement.Shadow);
+        Shader.SetKeyword(GlobalKeyword.Create("_DIRECTDIFFUSE_DISPLAYER"), elem == DisplayerElement.DirectionDiffuse);
+        Shader.SetKeyword(GlobalKeyword.Create("_DIRECTSPECULAR_DISPLAYER"), elem == DisplayerElement.DirectionSpecular);
+        Shader.SetKeyword(GlobalKeyword.Create("_INDIRECTDIFFUSE_DISPLAYER"), elem == DisplayerElement.IndirectionDiffuse);
+        Shader.SetKeyword(GlobalKeyword.Create("_INDIRECTSPECULAR_DISPLAYER"), elem == DisplayerElement.IndirectionSpecular);
     }
 }

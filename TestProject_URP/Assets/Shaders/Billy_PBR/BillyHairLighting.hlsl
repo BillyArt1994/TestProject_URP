@@ -113,10 +113,10 @@
         float3 indirectSpecular = irradianceEnv*(SpecularColor*0.4524-0.0024) ;
         //col  = directspecular;
 
-        //#ifdef DIRECTDIFFUSE
+        //#ifdef _DIRECTDIFFUSE_DISPLAYER
         //col += directdiffuse;
         //#endif 
-        //#ifdef DIRECTSPECULAR 
+        //#ifdef _DIRECTSPECULAR_DISPLAYER 
         //col += directspecular;
         //#endif  
         #ifdef INDIRECTDIFFUSE_ON 

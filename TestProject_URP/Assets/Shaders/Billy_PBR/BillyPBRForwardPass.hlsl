@@ -65,21 +65,19 @@ float4 PBRPassFragment (Varyings input) : SV_Target
     ao = _AO;
     roughness = _Roughness;
     metalic = _Metalic;
-    
     emissive = 1.0;
     #endif
     BillyBRDFData brdfData = (BillyBRDFData)0;
     InitializeBRDFData(albedo,ao,roughness,metalic,reflectance,emissive,brdfData);
-
     Light mainlight = GetMainLight(TransformWorldToShadowCoord(input.positionWS.xyz));
-
     float3 viewDir = normalize(input.viewDirWS);
-
     float4 normalTS = SAMPLE_TEXTURE2D(_NormalTex,sampler_NormalTex,input.uv);
     normalTS.xyz = UnpackNormal(normalTS);
-
     float3 normal = TransformTangentToWorld(normalTS,half3x3(input.tangentWS.xyz,input.BtangentWS.xyz,input.normalWS.xyz));
     normal = normalize(normal.xyz);
+
+
+
     float4 col = Billy_PBS_Lighting(brdfData,normal,viewDir,input.normalWS.xyz,mainlight);
     half3 additionalLightsSumResult = 0;
 
@@ -107,6 +105,23 @@ float4 PBRPassFragment (Varyings input) : SV_Target
         clip(albedo.a -_Cutoff);
         #endif
     #endif
+
+    #if defined(_ALBEDO_DISPLAYER)
+    col = albedo;
+    #endif
+    #if defined(_METALLIC_DISPLAYER)
+    col = metalic;
+    #endif
+    #if defined(_ROUNGHNESS_DISPLAYER)
+    col = roughness;
+    #endif
+    #if defined(_AO_DISPLAYER)
+    col = ao;
+    #endif
+    #if defined(_NORMAL_DISPLAYER)
+    col = half4(normal,1.0);
+    #endif
+
     return col;
 
 }

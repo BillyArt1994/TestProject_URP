@@ -228,10 +228,6 @@ namespace CommonShaderGUI
         {
             EditorGUILayout.BeginVertical("Box");
             m_editor.ShaderProperty(IBL_BrdfMode, "IBL SpecularBrdf Mode");
-            m_editor.ShaderProperty(show_directDiffuse, "Direct Diffuse");
-            m_editor.ShaderProperty(show_directSpecular, "Direct Specular");
-            m_editor.ShaderProperty(show_indirectDiffuse, "InDirect Diffuse");
-            m_editor.ShaderProperty(show_indirectSpecular, "InDirect Specular");
             EditorGUILayout.EndVertical();
             EditorGUILayout.BeginVertical("Box");
             m_editor.ShaderProperty(CheckValue, "> Measure The Output Value");

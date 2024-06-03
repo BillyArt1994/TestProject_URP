@@ -60,12 +60,11 @@ float4 PBRPassFragment (Varyings input) : SV_Target
     metalic = _Metalic;
     emissive = 1.0;
     #endif
-     
+
     float deltaWorldNormal = fwidth(input.normalWS);// length(abs(ddx(normalInput.normalWS))+abs(ddy(normalInput.normalWS)));
     float deltaWorldPos = fwidth(input.positionWS);// length(abs(ddx(vertexInput.positionWS))+abs(ddy(vertexInput.positionWS)));
 
     float curvature = 1.0;//(deltaWorldNormal/deltaWorldPos) * 0.01*_CurvatureFactore;//SAMPLE_TEXTURE2D(_Curvature,sampler_Curvature,input.uv).r;
-    //return curvature;
     float thickness = 1.0 - SAMPLE_TEXTURE2D(_Thickness,sampler_Thickness,input.uv).r;
 
     BillyBRDFData brdfData = (BillyBRDFData)0;

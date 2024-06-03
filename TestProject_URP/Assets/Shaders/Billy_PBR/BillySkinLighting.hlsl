@@ -9,6 +9,7 @@
     float3 Billy_Skin_Lighting(BillyBRDFData brdfData,float3 normal,float3 viewDir,float curvature,float thickness,float3 vertexNormal,Light light)
     {
         half shadow = max(light.shadowAttenuation,0.0);
+        //shadow = ApplyMicroShadow(brdfData.ao,normal,light.direction,shadow);
         float3 halfDir = normalize(light.direction+viewDir);
         float3 reflDir = reflect(-viewDir, normal);
         float NdotLRaw = dot(normal,light.direction);
@@ -50,7 +51,7 @@
         float3 kd = (1-F);
 
         float3 directdiffuse = brdfData.diffuse*rgbShadow*kd*diffuseBrdf*light.distanceAttenuation*light.color;
-        directdiffuse += brdfData.diffuse*transmittance*_TranslucencyColor*light.color;
+        //directdiffuse += brdfData.diffuse*transmittance*_TranslucencyColor*light.color;
 
         float3 directspecular = (D1*1.5+D2*0.5)*F*G*PI*NdotL*light.distanceAttenuation *light.color*rgbShadow;
 
@@ -80,16 +81,16 @@
         indirectDiffuse.b = (brdfData.diffuse*(SampleSH(normal))*brdfData.ao).b;
 
         float3 col = 0.0.xxx;
-        #ifdef DIRECTDIFFUSE
+        #ifdef _DIRECTDIFFUSE_DISPLAYER
         col += directdiffuse;
         #endif 
-        #ifdef DIRECTSPECULAR 
+        #ifdef _DIRECTSPECULAR_DISPLAYER 
         col += directspecular;
         #endif  
-        #ifdef INDIRECTDIFFUSE 
+        #ifdef _INDIRECTDIFFUSE_DISPLAYER 
         col += indirectDiffuse;
         #endif  
-        #ifdef INDIRECTSPECULAR 
+        #ifdef _INDIRECTSPECULAR_DISPLAYER 
         col += indirectSpecular;
         #endif  
         return col;
@@ -166,10 +167,10 @@
        // return translucencyColor.xyzz;
 
         float3 col = 0.0.xxx;
-        #ifdef DIRECTDIFFUSE
+        #ifdef _DIRECTDIFFUSE_DISPLAYER
         col += directdiffuse;
         #endif 
-        #ifdef DIRECTSPECULAR 
+        #ifdef _DIRECTSPECULAR_DISPLAYER 
         col += directspecular;
         #endif  
         return col;

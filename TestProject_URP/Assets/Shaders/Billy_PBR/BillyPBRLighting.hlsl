@@ -8,8 +8,9 @@
 
     float4 Billy_PBS_Lighting (BillyBRDFData brdfData,float3 normal,float3 viewDir,float3 vertexNormal,Light light)
 	{
+       // return brdfData.ao;
         half shadow = max(light.shadowAttenuation,0.0);
-        //return shadow;
+        shadow = ApplyMicroShadow(brdfData.ao,normal,light.direction,shadow);
         float3 halfDir = normalize(light.direction+viewDir);
         float3 reflDir = reflect(-viewDir, normal);
         float NdotL = saturate(dot(normal, light.direction));
@@ -46,18 +47,28 @@
         float3 indirectDiffuse = brdfData.diffuse*SampleSH(normal)*irKd*brdfData.ao;
 
         float3 col = 0.0.xxx;
-        #ifdef DIRECTDIFFUSE
-        col += directdiffuse;
+        col = directdiffuse+ directspecular+indirectDiffuse+indirectSpecular;
+
+        #if defined( _SHADOW_DISPLAYER)
+        col = shadow;
+        #endif
+
+        #if defined( _DIRECTDIFFUSE_DISPLAYER)
+        col =  directdiffuse;
         #endif 
-        #ifdef DIRECTSPECULAR 
-        col += directspecular;
+
+        #if defined( _DIRECTSPECULAR_DISPLAYER )
+        col = directspecular;
         #endif  
-        #ifdef INDIRECTDIFFUSE 
-        col += indirectDiffuse;
+
+        #if defined( _INDIRECTDIFFUSE_DISPLAYER )
+        col = indirectDiffuse;
         #endif  
-        #ifdef INDIRECTSPECULAR 
-        col += indirectSpecular;
+
+        #if defined( _INDIRECTSPECULAR_DISPLAYER )
+        col = indirectSpecular;
         #endif  
+
         return float4(col,1.0);
     }
 
@@ -65,6 +76,7 @@
     float3 Billy_PBS_AddLighting(BillyBRDFData brdfData,float3 normal,float3 viewDir,float3 vertexNormal,Light light)
     {
         half shadow = max(light.distanceAttenuation * light.shadowAttenuation,0.0);
+        shadow = ApplyMicroShadow(brdfData.ao,normal,light.direction,shadow);
         float3 halfDir = normalize(light.direction+viewDir);
         float3 reflDir = reflect(-viewDir, normal);
         float NdotL = saturate(dot(normal, light.direction));
@@ -82,10 +94,10 @@
         float3 directdiffuse = brdfData.diffuse*kd*NdotL*light.color*shadow;
 
         float3 col = 0.0.xxx;
-        #ifdef DIRECTDIFFUSE
+        #ifdef _DIRECTDIFFUSE_DISPLAYER
         col += directdiffuse;
         #endif 
-        #ifdef DIRECTSPECULAR 
+        #ifdef _DIRECTSPECULAR_DISPLAYER 
         col += directspecular;
         #endif
 

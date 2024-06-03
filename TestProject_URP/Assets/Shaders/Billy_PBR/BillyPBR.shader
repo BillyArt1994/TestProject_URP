@@ -27,10 +27,6 @@
         _Cutoff("Cut Off",Range(0.0,1.0)) = 0.0
         
         [KeywordEnum(UE4_BRDFApprox,Pre_Integration)] _IBLBrdfMode ("IBL Specular BRDF Mode",float) = 1.0
-        [Toggle(DIRECTDIFFUSE)] _DirectDiffuse ("Direct Lighting Diffuse",float) = 1.0
-        [Toggle(DIRECTSPECULAR)] _DirectSpecular ("Direct Lighting Specular",float) = 1.0
-        [Toggle(INDIRECTDIFFUSE)] _IndirectDiffuse ("Indirect Lighting Diffuse",float) = 1.0
-        [Toggle(INDIRECTSPECULAR)] _IndirectSpecular ("Indirect Lighting Specular",float) = 1.0
 
 		[Toggle(_CHECKVALUE)]_CheckValue("> Measure The Output Value", Float) = 0
         _ChkTargetValue(" ORANGE-GREEN-BLUE", Range(-0.1, 5.0)) = 0.1842
@@ -56,10 +52,16 @@
             #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
             #pragma multi_compile_fragment _ _ADDITIONAL_LIGHT_SHADOWS
             #pragma shader_feature _ _CHECKVALUE
-            #pragma shader_feature DIRECTDIFFUSE   
-            #pragma shader_feature DIRECTSPECULAR
-            #pragma shader_feature INDIRECTDIFFUSE
-            #pragma shader_feature INDIRECTSPECULAR
+            #pragma shader_feature _DIRECTDIFFUSE_DISPLAYER   
+            #pragma shader_feature _DIRECTSPECULAR_DISPLAYER
+            #pragma shader_feature _INDIRECTDIFFUSE_DISPLAYER
+            #pragma shader_feature _INDIRECTSPECULAR_DISPLAYER
+            #pragma shader_feature _ALBEDO_DISPLAYER
+            #pragma shader_feature _METALLIC_DISPLAYER
+            #pragma shader_feature _ROUNGHNESS_DISPLAYER
+            #pragma shader_feature _AO_DISPLAYER
+            #pragma shader_feature _NORMAL_DISPLAYER
+            #pragma shader_feature _SHADOW_DISPLAYER
             #pragma multi_compile  _IBLBRDFMODE_UE4_BRDFAPPROX _IBLBRDFMODE_PRE_INTEGRATION
             #pragma shader_feature_local _ _MRAE_MAP_ENABLED _BENTNORMAL_ENABLED
             #pragma shader_feature_local _ _DITHER_ENABLED

@@ -112,6 +112,13 @@ half HorizonOcclusion(half3 R, half3 normalWS, half3 vertexNormal, half horizonF
     return specularOcclusion * specularOcclusion;
 }
 
+float ApplyMicroShadow(float ao,float3 N,float3 L,float shadow)
+{
+    float aperture = 2*ao*ao;
+    float microShadow = saturate(abs(dot(N,L))+aperture - 1.0);
+    return microShadow*shadow;
+}
+
 half computeSpecOcclusion ( half NdotV , half AO , half roughness )
 {
     return saturate (pow( NdotV + AO , exp2 ( -16.0 * roughness - 1.0 )) - 1.0 + AO );
