@@ -93,13 +93,14 @@
         float3 kd = (1-F);
         float3 directdiffuse = brdfData.diffuse*kd*NdotL*light.color*shadow;
 
-        float3 col = 0.0.xxx;
-        #ifdef _DIRECTDIFFUSE_DISPLAYER
-        col += directdiffuse;
+        float3 col = directdiffuse + directspecular;
+        #if defined( _DIRECTDIFFUSE_DISPLAYER)
+        col = directdiffuse;
         #endif 
-        #ifdef _DIRECTSPECULAR_DISPLAYER 
-        col += directspecular;
-        #endif
+
+        #if defined( _DIRECTSPECULAR_DISPLAYER )
+        col = directspecular;
+        #endif  
 
         return col;
     }
