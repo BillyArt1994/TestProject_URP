@@ -219,7 +219,6 @@
             float3 ScatterTint = pow(SpecularColor / Luma, 1-Shadow);
             directdiffuse = sqrt(SpecularColor) * DiffuseScatter * ScatterTint;
             //dot(N, L);
-            return KajiyaDiffuse;//
             
         }
         #endif

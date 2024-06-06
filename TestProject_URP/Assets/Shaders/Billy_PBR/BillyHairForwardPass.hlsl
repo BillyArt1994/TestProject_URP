@@ -69,9 +69,12 @@ float4 frag (Varyings input , half face : VFACE) : SV_Target
     float t2 = flowMap2.z *2.0 -1.0;
     half faceFlag = face == 0 ? -1: 1;
     //return half4(input.tangentOS.xyz,1.0);
-    float3 T =  normalize(flowMap0.xyz *2.0 -1.0) ;
-    T.z = 0.0; 
-    //return T.xyzz;
+   // float3 T = float3(0.5,1.0,0.0)*2-1;//float3(flowMap0.xy,0.0);// normalize(flowMap0.xyz *2.0 -1.0) ;
+    //T.xy = max(T.xy,flowMap0.xy);
+    float3 T = input.bitangentOS;//float3(0.5,1.0,0.0);//float3(flowMap0.xy,0.0);// normalize(flowMap0.xyz *2.0 -1.0) ;
+    //T.xy = max(T.xy,flowMap0.xy);;// normalize(T.xy+(flowMap0.xy *2.0 -1.0));
+    //T.z = 0.0; 
+    return T.xyzz;
 
     float3 V = float3(dot(input.viewDirWS,input.tangentWS.xyz),dot(input.viewDirWS,input.BtangentWS.xyz),dot(input.viewDirWS,input.normalWS.xyz));
     V = normalize(V);
@@ -105,17 +108,16 @@ float4 frag (Varyings input , half face : VFACE) : SV_Target
     #endif
     col.xyz += additionalLightsSumResult;
 
-
-    float4 rootAO = tex2D(_AO_Root,input.uv);
+    float4 rootAO = flowMap0.bbbb;//tex2D(_AO_Root,input.uv);
     float r = _CutoffTips - _Cutoff;
-    r = rootAO.y * r +_Cutoff;
+    r = rootAO.y * r + _Cutoff;
     float ar = albedo.a - r;
     albedo.a =  albedo.a/(r+0.001);
     albedo.a = saturate(albedo.a);
     //return float4(col,albedo.a);
 
     #if defined(DEPTH_PASS)
-    if (ar <=0)
+    if (ar <=0.05)
     discard;
     #endif
     
