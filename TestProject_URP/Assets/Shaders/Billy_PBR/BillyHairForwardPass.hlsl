@@ -65,16 +65,17 @@ float4 frag (Varyings input , half face : VFACE) : SV_Target
     float4 flowMap0 = tex2D(_TangentTex,input.uv);
     float4 flowMap1 = tex2D(_TangentTex,uv.xy);
     float4 flowMap2 = tex2D(_TangentTex,uv.zw);
-    float t1 = (flowMap1.z *2.0 -1.0)*_SpecularNoiseIntensity;
+    float t1 = 0;//(flowMap1.z *2.0 -1.0)*_SpecularNoiseIntensity;
     float t2 = flowMap2.z *2.0 -1.0;
     half faceFlag = face == 0 ? -1: 1;
     //return half4(input.tangentOS.xyz,1.0);
    // float3 T = float3(0.5,1.0,0.0)*2-1;//float3(flowMap0.xy,0.0);// normalize(flowMap0.xyz *2.0 -1.0) ;
     //T.xy = max(T.xy,flowMap0.xy);
-    float3 T = input.bitangentOS;//float3(0.5,1.0,0.0);//float3(flowMap0.xy,0.0);// normalize(flowMap0.xyz *2.0 -1.0) ;
-    //T.xy = max(T.xy,flowMap0.xy);;// normalize(T.xy+(flowMap0.xy *2.0 -1.0));
-    //T.z = 0.0; 
-    return T.xyzz;
+    float3 T = float3(0.25,0.25,0.0);//float3(flowMap0.xy,0.0);// lerp(float3(1.0,0.0,0.0),float3(normalize(flowMap0.xy *2.0 -1.0),0.0),_SpecularNoiseIntensity);//float3(1.0,0.0,0.0);//float3(flowMap0.xy,0.0);// normalize(flowMap0.xyz *2.0 -1.0) ;
+    T.xy = normalize(T.xy + flowMap0.xy);//max(T.xy,normalize(flowMap0.xy));
+    //T.xy = normalize(flowMap0.xy);//normalize(flowMap0.xy*2-1);
+    T.z = 0.0; 
+   // return T.xyzz ;
 
     float3 V = float3(dot(input.viewDirWS,input.tangentWS.xyz),dot(input.viewDirWS,input.BtangentWS.xyz),dot(input.viewDirWS,input.normalWS.xyz));
     V = normalize(V);
