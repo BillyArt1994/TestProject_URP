@@ -1,9 +1,11 @@
 #ifndef BILLY_HAIR_INPUT_INCLUDED
 #define BILLY_HAIR_INPUT_INCLUDED
 
-float4 _Tint;
+float _EdgeSmooth;
+float _Edge;
 float _Wrap;
 float4 _RootColor;
+float _TipVariation;
 float4 _TipColor;
 float4 _SpecCol;
 float4 _SpecularColor;

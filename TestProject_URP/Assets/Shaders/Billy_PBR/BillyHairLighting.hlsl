@@ -5,7 +5,7 @@
 #include "BillyHairBRDF.hlsl"
 #include "BillyHairInput.hlsl"
 
-    float3 Billy_Hair_Lighting(float3 SpecularColor, float3 V,float3 N,float3 L,float t1,float Specular,float Roughness,float Backlit,float Area,float Scatter,Light light)
+    float3 Billy_Hair_Lighting(float3 SpecularColor, float3 V,float3 N,float3 L,float t1,float Specular,float Roughness,float Backlit,float Area,float Scatter,float ao,Light light)
     {
 
         half Shadow = max(light.shadowAttenuation,0.0);
@@ -109,8 +109,8 @@
         float mip_roughness = (Roughness * (1.7 - 0.7 * Roughness))*UNITY_SPECCUBE_LOD_STEPS;
         float4 encodedIrradiance  = SAMPLE_TEXTURECUBE_LOD(unity_SpecCube0,samplerunity_SpecCube0,reflDir,mip_roughness);
         float3 irradianceEnv = DecodeHDREnvironment(encodedIrradiance, unity_SpecCube0_HDR);
-        float3 indirectDiffuse = SpecularColor*(SampleSH(N));
-        float3 indirectSpecular = irradianceEnv*(SpecularColor*0.4524-0.0024) ;
+        float3 indirectDiffuse = SpecularColor*(SampleSH(N)) * ao;
+        float3 indirectSpecular = irradianceEnv*(SpecularColor*0.4524-0.0024) *ao;
         //col  = directspecular;
 
         //#ifdef _DIRECTDIFFUSE_DISPLAYER
@@ -129,9 +129,9 @@
         return col;
     }
 
-    float3 Billy_Hair_AddLighting (float3 SpecularColor, float3 V,float3 N,float3 L,float t1,float Specular,float Roughness,float Backlit,float Area,float Scatter,Light light)
+    float3 Billy_Hair_AddLighting (float3 SpecularColor, float3 V,float3 N,float3 L,float t1,float Specular,float Roughness,float Backlit,float Area,float Scatter,float ao,Light light)
     {
-        half Shadow = max(light.shadowAttenuation,0.0);
+        half Shadow = max(light.distanceAttenuation * light.shadowAttenuation,0.0);
         float3 directdiffuse = 0.0.xxx;
         float3 directspecular= 0.0.xxx;
         const float VoL       = dot(V,L);
@@ -217,9 +217,7 @@
             float DiffuseScatter =  lerp(NoL, KajiyaDiffuse, 0.33) * Scatter;
             float Luma = Luminance(SpecularColor);
             float3 ScatterTint = pow(SpecularColor / Luma, 1-Shadow);
-            directdiffuse = sqrt(SpecularColor) * DiffuseScatter * ScatterTint;
-            //dot(N, L);
-            
+            directdiffuse = sqrt(SpecularColor) * DiffuseScatter * ScatterTint;         
         }
         #endif
 

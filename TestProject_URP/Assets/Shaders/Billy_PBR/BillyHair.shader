@@ -2,11 +2,18 @@
 {
     Properties
     {
-        _Tint("Tint",COLOR) = (0.5,0.5,0.5,1.0)
+        
         _Albedo("Albedo",2D) = "white"{}
         _TangentTex("Tangent Tex",2D) = "bump"{}
         _AO_Root("AO Root",2D) ="white"{}
         
+        _Edge("Edge",Range(0,1))= 0.5
+        _EdgeSmooth("Edge Smooth",Range(0,1))=0.55
+
+        _RootColor("Root Color",COLOR) = (0.5,0.5,0.5,1.0)
+        _TipColor("Tip Color",COLOR) = (0.5,0.5,0.5,1.0)
+        _TipVariation("Tip Variation",Range(0.0,1.0)) = 0.0
+
         _SpecCol ("Spec Col",COLOR) = (0.5,0.5,0.5,1.0)
         _SecSpecCol ("Sec Spec Col",COLOR) = (0.5,0.5,0.5,1.0)
 
