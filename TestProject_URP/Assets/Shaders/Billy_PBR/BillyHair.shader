@@ -2,7 +2,6 @@
 {
     Properties
     {
-        
         _Albedo("Albedo",2D) = "white"{}
         _TangentTex("Tangent Tex",2D) = "bump"{}
         _AO_Root("AO Root",2D) ="white"{}
@@ -62,6 +61,17 @@
             #pragma shader_feature INDIRECTSPECULAR_ON
             #pragma multi_compile_fragment _ _SHADOWS_SOFT
             #pragma multi_compile _ _ADDITIONAL_LIGHTS
+            #pragma shader_feature _DIRECTDIFFUSE_DISPLAYER   
+            #pragma shader_feature _DIRECTSPECULAR_DISPLAYER
+            #pragma shader_feature _INDIRECTDIFFUSE_DISPLAYER
+            #pragma shader_feature _INDIRECTSPECULAR_DISPLAYER
+            #pragma shader_feature _ALBEDO_DISPLAYER
+            #pragma shader_feature _METALLIC_DISPLAYER
+            #pragma shader_feature _ROUNGHNESS_DISPLAYER
+            #pragma shader_feature _AO_DISPLAYER
+            #pragma shader_feature _NORMAL_DISPLAYER
+            #pragma shader_feature _SHADOW_DISPLAYER
+
             #define DEPTH_PASS
 
             #include "Math.hlsl"
@@ -95,6 +105,16 @@
             #pragma shader_feature INDIRECTSPECULAR_ON
             #pragma multi_compile_fragment _ _SHADOWS_SOFT
             #pragma multi_compile _ _ADDITIONAL_LIGHTS
+            #pragma shader_feature _DIRECTDIFFUSE_DISPLAYER   
+            #pragma shader_feature _DIRECTSPECULAR_DISPLAYER
+            #pragma shader_feature _INDIRECTDIFFUSE_DISPLAYER
+            #pragma shader_feature _INDIRECTSPECULAR_DISPLAYER
+            #pragma shader_feature _ALBEDO_DISPLAYER
+            #pragma shader_feature _METALLIC_DISPLAYER
+            #pragma shader_feature _ROUNGHNESS_DISPLAYER
+            #pragma shader_feature _AO_DISPLAYER
+            #pragma shader_feature _NORMAL_DISPLAYER
+            #pragma shader_feature _SHADOW_DISPLAYER
 
             #include "Math.hlsl"
             #include "BillyHairBRDF.hlsl"
@@ -127,6 +147,7 @@
             // Shader Stages
             #pragma vertex ShadowPassVertex
             #pragma fragment ShadowPassFragment
+            #define _ALPHATEST_ON 1
 
             // -------------------------------------
             // Material Keywords
@@ -147,9 +168,9 @@
 
             // This is used during shadow map generation to differentiate between directional and punctual light shadows, as they use different formulas to apply Normal Bias
             #pragma multi_compile_vertex _ _CASTING_PUNCTUAL_LIGHT_SHADOW
- 
-            #include "Packages/com.unity.render-pipelines.universal/Shaders/LitInput.hlsl"
-            #include "Packages/com.unity.render-pipelines.universal/Shaders/ShadowCasterPass.hlsl"
+
+            
+            #include "BillyHairShadowCasterPass.hlsl"
             ENDHLSL
         } 
     }

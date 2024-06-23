@@ -9,6 +9,7 @@
     {
 
         half Shadow = max(light.shadowAttenuation,0.0);
+        //Shadow = min(Shadow,ao*5);
         float3 reflDir = reflect(-V, N);
         float3 directdiffuse = 0.0.xxx;
         float3 directspecular= 0.0.xxx;
@@ -50,7 +51,7 @@
             float Np = 0.25 * CosHalfPhi;
             float Fp = Hair_F(sqrt(saturate( 0.5 + 0.5 * VoL)));
             directspecular += Specular * Mp * Np * Fp *lerp(1,Backlit,saturate(-VoL))*_SpecCol;
-            //return  CosHalfPhi;
+            
         }
         #endif
 
@@ -64,7 +65,7 @@
             float3 Tp = pow(_SecSpecCol, 0.8 / CosThetaD);
             float Np = exp(17 * CosPhi - 16.78);
             directspecular += Mp * Np * Fp * Tp;
-            //return float4(Np.xxx,albedo.a);
+           
         }
         #endif
 
@@ -80,6 +81,8 @@
             float3 Tp = pow(SpecularColor, 0.5 * sqrt(1 - pow2(h * a)) / CosThetaD);
             float Np = exp(-3.65 * CosPhi - 3.98);
             directspecular += Mp * Np * Fp * Tp * Backlit;
+           // return Mp * Np * Fp * Tp * Backlit;
+
         }
         #endif
 
@@ -96,36 +99,44 @@
             float Luma = Luminance(SpecularColor);
             float3 ScatterTint = pow(SpecularColor / Luma, 1-Shadow);
             directdiffuse = sqrt(SpecularColor) * DiffuseScatter * ScatterTint;
-
-           
+          // return directdiffuse;
         }
         #endif
 
 
         float3 col = 0.0.xxx;
-        col += directdiffuse+ directspecular;
-        col *=light.color* Shadow;
+        directspecular = directspecular*light.color* Shadow;
+        directdiffuse = directdiffuse*light.color* Shadow;
+        col = (directdiffuse+ directspecular);
+
+        //return directdiffuse;
 
         float mip_roughness = (Roughness * (1.7 - 0.7 * Roughness))*UNITY_SPECCUBE_LOD_STEPS;
         float4 encodedIrradiance  = SAMPLE_TEXTURECUBE_LOD(unity_SpecCube0,samplerunity_SpecCube0,reflDir,mip_roughness);
         float3 irradianceEnv = DecodeHDREnvironment(encodedIrradiance, unity_SpecCube0_HDR);
         float3 indirectDiffuse = SpecularColor*(SampleSH(N)) * ao;
         float3 indirectSpecular = irradianceEnv*(SpecularColor*0.4524-0.0024) *ao;
-        //col  = directspecular;
+        col  += indirectSpecular +indirectDiffuse;
 
-        //#ifdef _DIRECTDIFFUSE_DISPLAYER
-        //col += directdiffuse;
-        //#endif 
-        //#ifdef _DIRECTSPECULAR_DISPLAYER 
-        //col += directspecular;
-        //#endif  
-        #ifdef INDIRECTDIFFUSE_ON 
-        col += indirectDiffuse;
+        #ifdef _DIRECTDIFFUSE_DISPLAYER
+        col = directdiffuse;
+        #endif 
+
+        #ifdef _DIRECTSPECULAR_DISPLAYER 
+        col = directspecular;
+        #endif  
+        #if defined( _INDIRECTDIFFUSE_DISPLAYER)
+        col = indirectDiffuse;
         #endif  
 
-        #ifdef INDIRECTSPECULAR_ON 
-        col += indirectSpecular;
+        #if defined( _INDIRECTSPECULAR_DISPLAYER )
+        col = indirectSpecular;
         #endif  
+
+        #if defined( _SHADOW_DISPLAYER)
+        col = Shadow;
+        #endif
+
         return col;
     }
 
@@ -223,8 +234,14 @@
 
 
         float3 col = 0.0.xxx;
-        col += directdiffuse+ directspecular;
+        col += directdiffuse + directspecular;
         col *= light.color * Shadow;
+
+        #if defined( _SHADOW_DISPLAYER)
+        col = Shadow;
+        #endif
+
+
         return col;
     }
 

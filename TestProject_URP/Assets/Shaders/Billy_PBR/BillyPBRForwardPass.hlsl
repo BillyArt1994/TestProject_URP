@@ -12,6 +12,7 @@ struct Attributes
     float3 normalOS     : NORMAL;
     float4 tangentOS    : TANGENT;
     float2 texcoord     : TEXCOORD0;
+    float4 color        : COLOR;
 };
 struct Varyings
 {
@@ -23,6 +24,7 @@ struct Varyings
     float3 viewDirWS     : TEXCOORD5;
     float4 positionCS    : SV_POSITION;
     float4 screenPos     :TEXCOORD7;
+    float4 color         :TEXCOORD8;
 };
 
 Varyings PBRPassVertex (Attributes input)
@@ -46,6 +48,7 @@ Varyings PBRPassVertex (Attributes input)
     output.viewDirWS = GetCameraPositionWS() - vertexInput.positionWS;
     output.uv = input.texcoord;
     output.screenPos = ComputeScreenPos(output.positionCS);
+    output.color = input.color;
     return output;
 }
 
@@ -62,7 +65,7 @@ float4 PBRPassFragment (Varyings input) : SV_Target
     metalic = mraeMap.r;
     emissive = mraeMap.a;
     #else
-    ao = _AO;
+    ao = input.color.g;//_AO;
     roughness = _Roughness;
     metalic = _Metalic;
     emissive = 1.0;

@@ -30,6 +30,7 @@ Material:
   - R_ON
   - SCATTER_ON
   - TRT_ON
+  - TT_ON
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -121,15 +122,15 @@ Material:
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
     - _Cull: 2
-    - _Cutoff: 0.126
-    - _CutoffTips: 0.342
+    - _Cutoff: 0.1
+    - _CutoffTips: 0.4
     - _Debug: 0.1
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
     - _DstBlendAlpha: 0
-    - _Edge: 0.738
-    - _EdgeSmooth: 0.71
+    - _Edge: 0.789
+    - _EdgeSmooth: 0.243
     - _EnvironmentReflections: 1
     - _GlossMapScale: 0
     - _Glossiness: 0
@@ -155,7 +156,7 @@ Material:
     - _SrcBlendAlpha: 1
     - _Surface: 0
     - _TRT_ON: 1
-    - _TT_ON: 0
+    - _TT_ON: 1
     - _TipVariation: 1
     - _WorkflowMode: 1
     - _Wrap: 0
@@ -164,10 +165,10 @@ Material:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _RootColor: {r: 0.7077522, g: 0.5518868, b: 1, a: 1}
+    - _RootColor: {r: 0.514151, g: 1, b: 0.98795164, a: 1}
     - _SecSpecCol: {r: 1, g: 1, b: 1, a: 1}
     - _SpecCol: {r: 1, g: 1, b: 1, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
     - _Tint: {r: 0.5188679, g: 0.30593628, b: 0.30593628, a: 1}
-    - _TipColor: {r: 0.7830189, g: 0.46907264, b: 0.5658727, a: 1}
+    - _TipColor: {r: 0.67258817, g: 1, b: 0.6084906, a: 1}
   m_BuildTextureStacks: []
