@@ -75,7 +75,7 @@ float4 frag (Varyings input , half face : VFACE) : SV_Target
     float t2 = flowMap2.z *2.0 -1.0;
     half faceFlag = face == 0 ? -1: 1;
     float3 T = float3(0.0,1,0.0);
-    T.xy = lerp(T.xy,float2(0.5,flowMap0.y),flowMap0.a);
+    T.xy = lerp(T.xy,float2(0.0,flowMap0.y),flowMap0.a);
     T.z = 0;
 
     float3 V = float3(dot(input.viewDirWS,input.tangentWS.xyz),dot(input.viewDirWS,input.BtangentWS.xyz),dot(input.viewDirWS,input.normalWS.xyz));
@@ -110,9 +110,7 @@ float4 frag (Varyings input , half face : VFACE) : SV_Target
     float r = _CutoffTips - _Cutoff;
     r = rootAO.y * r + _Cutoff;
     float ar = flowMap0.a - r;
-   // flowMap0.a =  flowMap0.a/(r+0.001);
-    //flowMap0.a = saturate(flowMap0.a);
-    //return float4(col,albedo.a);
+
 
     #if defined(DEPTH_PASS)
     clip(flowMap0.a -_Cutoff );

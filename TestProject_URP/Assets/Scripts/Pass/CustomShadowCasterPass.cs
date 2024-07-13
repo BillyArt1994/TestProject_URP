@@ -25,6 +25,8 @@ public class CustomShadowCasterPass : ScriptableRenderPass
 
     FilteringSettings m_FilteringSettings = new FilteringSettings(RenderQueueRange.all);
     ShaderTagId m_ShaderTagId = new ShaderTagId("ShadowCaster");
+    private bool m_On = false;
+
 
     public CustomShadowCasterPass(RenderPassEvent Event)
     {
@@ -106,7 +108,7 @@ public class CustomShadowCasterPass : ScriptableRenderPass
         //m_customshadowmap?.Release();
     }
 
-    public void Projection(float radius, float sceneCaptureDistance, float depthBias)
+    public void Projection(float radius, float sceneCaptureDistance)
     {
         float nearClipPlane = 0f;
         float farClipPlane = radius * 2f + sceneCaptureDistance;

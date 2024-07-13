@@ -52,23 +52,23 @@
             #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
             #pragma multi_compile_fragment _ _ADDITIONAL_LIGHT_SHADOWS
             #pragma shader_feature _ _CHECKVALUE
-            #pragma shader_feature _DIRECTDIFFUSE_DISPLAYER   
-            #pragma shader_feature _DIRECTSPECULAR_DISPLAYER
-            #pragma shader_feature _INDIRECTDIFFUSE_DISPLAYER
-            #pragma shader_feature _INDIRECTSPECULAR_DISPLAYER
-            #pragma shader_feature _ALBEDO_DISPLAYER
-            #pragma shader_feature _METALLIC_DISPLAYER
-            #pragma shader_feature _ROUNGHNESS_DISPLAYER
-            #pragma shader_feature _AO_DISPLAYER
-            #pragma shader_feature _NORMAL_DISPLAYER
-            #pragma shader_feature _SHADOW_DISPLAYER
+            #pragma shader_feature _ _DIRECTDIFFUSE_DISPLAYER   
+            #pragma shader_feature _ _DIRECTSPECULAR_DISPLAYER
+            #pragma shader_feature _ _INDIRECTDIFFUSE_DISPLAYER
+            #pragma shader_feature _ _INDIRECTSPECULAR_DISPLAYER
+            #pragma shader_feature _ _ALBEDO_DISPLAYER
+            #pragma shader_feature _ _METALLIC_DISPLAYER
+            #pragma shader_feature _ _ROUNGHNESS_DISPLAYER
+            #pragma shader_feature _ _AO_DISPLAYER
+            #pragma shader_feature _ _NORMAL_DISPLAYER
+            #pragma shader_feature _ _SHADOW_DISPLAYER
             #pragma multi_compile  _IBLBRDFMODE_UE4_BRDFAPPROX _IBLBRDFMODE_PRE_INTEGRATION
             #pragma shader_feature_local _ _MRAE_MAP_ENABLED _BENTNORMAL_ENABLED
             #pragma shader_feature_local _ _DITHER_ENABLED
             #pragma shader_feature_local _ _ALPHACLIP_ENABLED
             #pragma multi_compile_fragment _ _SHADOWS_SOFT
-            #pragma multi_compile _ _ADDITIONAL_LIGHTS
-            #pragma multi_compile_local_fragment _ _CUSTOM_SHADOW
+            #pragma multi_compile_local _ _ADDITIONAL_LIGHTS
+            #pragma multi_compile_local _ _CUSTOM_SHADOW
 
             #include "BillyPBRForwardPass.hlsl"
 
@@ -91,10 +91,9 @@
             HLSLPROGRAM
             #pragma multi_compile_fragment _ LOD_FADE_CROSSFADE
             #pragma shader_feature_local _ALPHATEST_ON
-            #pragma shader_feature _UNIQUE_SHADOW
             // This is used during shadow map generation to differentiate between directional and punctual light shadows, as they use different formulas to apply Normal Bias
             #pragma multi_compile_vertex _ _CASTING_PUNCTUAL_LIGHT_SHADOW
-            #pragma multi_compile_local_vertex _ _CUSTOM_SHADOW
+            #pragma multi_compile_local _ _CUSTOM_SHADOW
             #pragma vertex ShadowPassVertex
             #pragma fragment ShadowPassFragment
 

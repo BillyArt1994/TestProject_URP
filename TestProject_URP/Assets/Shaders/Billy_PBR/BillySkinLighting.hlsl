@@ -38,11 +38,10 @@
         half3 rgbNdotL = half3(saturate(NdotL_low) ,NdotLShadeG,NdotLShadeB);
 
         half3 diffuseBrdf = SAMPLE_TEXTURE2D(_SkinBrdfLUT,sampler_SkinBrdfLUT,half2(NdotL_low*0.5+0.5,curvatureScaled));
-
         thickness *=_DeepScale;
-        #if defined(THICKNESS)
-        return thickness ;
-        #endif
+        //#if defined(THICKNESS)
+        //return thickness ;
+        //#endif
         float transmittance = exp2(_DeepScatterFalloff * thickness * thickness);
         float minusNDotL = -dot(NdotL_low, light.direction);
         transmittance *= saturate(minusNDotL + 0.3);
@@ -61,6 +60,7 @@
         float4 encodedIrradiance  = SAMPLE_TEXTURECUBE_LOD(unity_SpecCube0,samplerunity_SpecCube0,reflDir,mip_roughness);
         float3 irradianceEnv = DecodeHDREnvironment(encodedIrradiance, unity_SpecCube0_HDR);
         irradianceEnv *= HorizonOcclusion(reflDir,normal,vertexNormal,_HorizonFade)*specularAO;   
+
         float3 irKs = fresnelSchlickRoughness(NdotV,brdfData.reflectivity,brdfData.roughness);
 
         float3 irKd = (1.0 - irKs);
@@ -75,24 +75,36 @@
 
         float3 indirectDiffuse;
         float3 ambientMN = normalize(lerp(normal,N_low,0.3)) ;
+        half3 bleedAO = pow(abs(brdfData.ao),1.0- half3(0.4,0.15,0.13));
+
         indirectDiffuse = brdfData.diffuse*(SampleSH(normal))*brdfData.ao;
         indirectDiffuse.r = (brdfData.diffuse*(SampleSH(N_low))*brdfData.ao).r;
         indirectDiffuse.g = (brdfData.diffuse*(SampleSH(ambientMN))*brdfData.ao).g;
         indirectDiffuse.b = (brdfData.diffuse*(SampleSH(normal))*brdfData.ao).b;
 
         float3 col = 0.0.xxx;
-        #ifdef _DIRECTDIFFUSE_DISPLAYER
-        col += directdiffuse;
+        col = directdiffuse + directspecular+ indirectDiffuse ;
+
+        #if defined( _SHADOW_DISPLAYER)
+        col = shadow;
+        #endif
+
+        #if defined( _DIRECTDIFFUSE_DISPLAYER)
+        col =  directdiffuse;
         #endif 
-        #ifdef _DIRECTSPECULAR_DISPLAYER 
-        col += directspecular;
+
+        #if defined( _DIRECTSPECULAR_DISPLAYER )
+        col = directspecular;
         #endif  
-        #ifdef _INDIRECTDIFFUSE_DISPLAYER 
-        col += indirectDiffuse;
+
+        #if defined( _INDIRECTDIFFUSE_DISPLAYER )
+        col = indirectDiffuse;
         #endif  
-        #ifdef _INDIRECTSPECULAR_DISPLAYER 
-        col += indirectSpecular;
+
+        #if defined( _INDIRECTSPECULAR_DISPLAYER )
+        col = indirectSpecular;
         #endif  
+
         return col;
     }
 

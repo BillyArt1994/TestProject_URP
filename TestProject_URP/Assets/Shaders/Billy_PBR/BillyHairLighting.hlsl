@@ -51,7 +51,6 @@
             float Np = 0.25 * CosHalfPhi;
             float Fp = Hair_F(sqrt(saturate( 0.5 + 0.5 * VoL)));
             directspecular += Specular * Mp * Np * Fp *lerp(1,Backlit,saturate(-VoL))*_SpecCol;
-            
         }
         #endif
 
@@ -65,9 +64,10 @@
             float3 Tp = pow(_SecSpecCol, 0.8 / CosThetaD);
             float Np = exp(17 * CosPhi - 16.78);
             directspecular += Mp * Np * Fp * Tp;
-           
         }
         #endif
+
+       
 
         #ifdef TT_ON
         //TT
@@ -99,9 +99,10 @@
             float Luma = Luminance(SpecularColor);
             float3 ScatterTint = pow(SpecularColor / Luma, 1-Shadow);
             directdiffuse = sqrt(SpecularColor) * DiffuseScatter * ScatterTint;
-          // return directdiffuse;
         }
         #endif
+
+        //return directdiffuse;
 
 
         float3 col = 0.0.xxx;
@@ -109,7 +110,7 @@
         directdiffuse = directdiffuse*light.color* Shadow;
         col = (directdiffuse+ directspecular);
 
-        //return directdiffuse;
+     
 
         float mip_roughness = (Roughness * (1.7 - 0.7 * Roughness))*UNITY_SPECCUBE_LOD_STEPS;
         float4 encodedIrradiance  = SAMPLE_TEXTURECUBE_LOD(unity_SpecCube0,samplerunity_SpecCube0,reflDir,mip_roughness);
@@ -117,6 +118,8 @@
         float3 indirectDiffuse = SpecularColor*(SampleSH(N)) * ao;
         float3 indirectSpecular = irradianceEnv*(SpecularColor*0.4524-0.0024) *ao;
         col  += indirectSpecular +indirectDiffuse;
+
+        
 
         #ifdef _DIRECTDIFFUSE_DISPLAYER
         col = directdiffuse;

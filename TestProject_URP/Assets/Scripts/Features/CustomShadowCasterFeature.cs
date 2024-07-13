@@ -37,8 +37,8 @@ public class CustomShadowCasterFeature : ScriptableRendererFeature
         }
     }
 
-    public void Projection(float radius, float sceneCaptureDistance, float depthBias) {
-        m_customShadowPass.Projection(radius, sceneCaptureDistance, depthBias);
+    public void Projection(float radius, float sceneCaptureDistance) {
+        m_customShadowPass.Projection(radius, sceneCaptureDistance);
     }
 
     public void Transform(Vector3 pos ,Quaternion rot)

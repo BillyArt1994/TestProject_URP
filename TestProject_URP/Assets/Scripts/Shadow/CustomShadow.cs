@@ -10,20 +10,23 @@ using static UnityEditor.PlayerSettings;
 using static UnityEngine.GraphicsBuffer;
 using static UnityEngine.Rendering.DebugUI.Table;
 
-[ExecuteInEditMode]
+[AddComponentMenu("LobbyCharacterRender/CustomShadow"), ExecuteInEditMode]
 public class CustomShadow : MonoBehaviour
 {
     public TexSize m_shadowMapSize = TexSize._1024;
     public Transform m_target;
     private Transform m_targetTemp;
+    public bool m_autoFocus;
     public Vector3 m_offest;
+    private Plane[] cullPlanes = new Plane[6];
+    Bounds bounds = new Bounds();
     public Light m_light;
     public float m_radius = 1f;
-    public float m_sceneCaptureDistance = 4f;
-    [Range(0.0f, 5.0f)]
-    public float m_depthBias = 0.1f;
-    [Range(0.0f, 5.0f)]
-    public float m_filterScale = 1.0f;
+    public float m_sceneCaptureDistance = 0f;
+    //[Range(0.0f, 5.0f)]
+    //public float m_depthBias = 0.1f;
+    //[Range(0.0f, 5.0f)]
+    //public float m_filterScale = 1.0f;
     CustomShadowCasterFeature m_customShadow;
     private bool dirty = true;
     const string CUSTOM_SHADOW_KW = "_CUSTOM_SHADOW";
@@ -57,7 +60,7 @@ public class CustomShadow : MonoBehaviour
                 m_light.gameObject.AddComponent<CustomShadowLightHelper>();
             }
         }
-        //SetFocus();
+        SetFocus();
     }
 
 
@@ -70,8 +73,14 @@ public class CustomShadow : MonoBehaviour
         }
 
         m_customShadow.Init((int)m_shadowMapSize, (int)m_shadowMapSize);
-        SetFocus();
-        Debug.Log("OnEnable");
+        //SetFocus();
+    }
+    private void OnDisable()
+    {
+        if (m_target != null)
+        {
+            SetKeyWord(m_target, CUSTOM_SHADOW_KW, false);
+        }
     }
 
     void OnValidate()
@@ -90,8 +99,62 @@ public class CustomShadow : MonoBehaviour
     public void SetFocus()
     {
         if (m_customShadow == null) return;
-        m_customShadow.Projection(m_radius, m_sceneCaptureDistance, m_depthBias);
-        CheckVisibility(m_light);
+
+
+        if (m_autoFocus)
+            UpdateFocusRadius();
+
+        if (dirty) 
+        {
+            m_customShadow.Projection(m_radius, m_sceneCaptureDistance);
+            CheckVisibility(m_light);
+            dirty = false;
+        }
+    }
+
+    void UpdateFocusRadius()
+    {
+        if (m_target == null)
+        {
+            return;
+        }
+
+        GeometryUtility.CalculateFrustumPlanes(Camera.main, cullPlanes);
+
+
+        var renders = m_target.GetComponentsInChildren<SkinnedMeshRenderer>();
+        bool init = false;
+        for (int i = 0; i < renders.Length; i++)
+        {
+            var aabb = renders[i].bounds;
+            if (GeometryUtility.TestPlanesAABB(cullPlanes, aabb))
+            {
+                if (!init)
+                {
+                    bounds = aabb;
+                    init = true;
+                }
+                else
+                    bounds.Encapsulate(aabb);
+            }
+        }
+
+        if (!init)
+            return;
+
+        Vector3 extents = bounds.extents;
+        if (extents.x > 0.1f || extents.y > 0.1f)
+        {
+            Vector3 offset = bounds.center - m_target.position;
+            float radius = Mathf.Max(extents.x, extents.y, extents.z);
+
+            if ((this.m_offest - offset).magnitude > 0.15 || Mathf.Abs(this.m_radius - radius) > 0.1)
+            {
+                this.m_offest = offset;
+                this.m_radius = radius;
+                dirty = true;
+            }
+        }
     }
 
     bool CheckVisibility(Light light)
@@ -135,7 +198,7 @@ public class CustomShadow : MonoBehaviour
         Gizmos.DrawWireCube(center, size);
     }
 
-    private void OnDisable()
+    private void OnDestroy()
     {
         if (m_target != null)
         {
@@ -143,12 +206,10 @@ public class CustomShadow : MonoBehaviour
         }
     }
 
-    private void OnDestroy()
+    public void LateUpdate()
     {
-        if (m_target != null)
-        {
-            SetKeyWord(m_target, CUSTOM_SHADOW_KW, false);
-        }
+        if (m_autoFocus)
+            SetFocus();//m_customShadow.SetOn(target != null);
     }
 
     /// <summary>
@@ -178,4 +239,17 @@ public class CustomShadow : MonoBehaviour
             }
         }
     }
+
+#if UNITY_EDITOR
+    [MenuItem("GameObject/LobbyCharacterRender/CustomShadow", false, 10)]
+    static void CreatePlanarReflectionObject(MenuCommand menuCommand)
+    {
+        GameObject go = new GameObject("CustomShadow", typeof(CustomShadow));
+
+        GameObjectUtility.SetParentAndAlign(go, menuCommand.context as GameObject);
+
+        Undo.RegisterCreatedObjectUndo(go, "Create " + go.name);
+        Selection.activeObject = go;
+    }
+#endif
 }

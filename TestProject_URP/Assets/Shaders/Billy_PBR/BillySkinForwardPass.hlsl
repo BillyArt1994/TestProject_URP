@@ -51,8 +51,8 @@ float4 PBRPassFragment (Varyings input) : SV_Target
     #ifdef _MRAE_MAP_ENABLED
     float4 mraeMap = SAMPLE_TEXTURE2D(_MRAEMap,sampler_MRAEMap,input.uv);
     ao = mraeMap.b;
-    roughness = mraeMap.g;
-    metalic = mraeMap.r;
+    roughness = _Roughness;
+    metalic = _Metalic;
     emissive = mraeMap.a;
     #else
     ao = _AO;
@@ -114,6 +114,23 @@ float4 PBRPassFragment (Varyings input) : SV_Target
         clip(_Cutoff - albedo.a);
         #endif
     #endif
+
+    #if defined(_ALBEDO_DISPLAYER)
+    col = albedo;
+    #endif
+    #if defined(_METALLIC_DISPLAYER)
+    col = metalic;
+    #endif
+    #if defined(_ROUNGHNESS_DISPLAYER)
+    col = roughness;
+    #endif
+    #if defined(_AO_DISPLAYER)
+    col = ao;
+    #endif
+    #if defined(_NORMAL_DISPLAYER)
+    col = half4(normal,1.0);
+    #endif
+
     return half4(col,1.0);
 }
 #endif
