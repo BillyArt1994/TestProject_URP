@@ -2,7 +2,7 @@
 {
     Properties
     {
-        _Tint("Tint",COLOR) = (0.5,0.5,0.5,1.0)
+        _Tint("Tint",COLOR) = (1.0,1.0,1.0,1.0)
         _Albedo("Albedo",2D) = "white"{}
         [Normal]_NormalTex("Normal",2D) = "bump"{}
         [Toggle(_MRAE_MAP_ENABLED)] _MRAEMapEnabled("MRAE Map Enabled", Float) = 0

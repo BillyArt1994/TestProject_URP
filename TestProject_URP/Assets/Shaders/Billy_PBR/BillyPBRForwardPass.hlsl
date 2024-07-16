@@ -54,7 +54,7 @@ Varyings PBRPassVertex (Attributes input)
 
 float4 PBRPassFragment (Varyings input) : SV_Target
 {
-    float4 albedo = SAMPLE_TEXTURE2D(_Albedo,sampler_Albedo,input.uv);
+    float4 albedo = SAMPLE_TEXTURE2D(_Albedo,sampler_Albedo,input.uv*_Albedo_ST.xy+_Albedo_ST.zw);
     albedo.xyz *= _Tint.xyz;
     float ao,roughness,metalic,reflectance,emissive;
     reflectance = _Reflectivity;
@@ -74,12 +74,10 @@ float4 PBRPassFragment (Varyings input) : SV_Target
     InitializeBRDFData(albedo,ao,roughness,metalic,reflectance,emissive,brdfData);
     Light mainlight = GetMainLight(TransformWorldToShadowCoord(input.positionWS.xyz));
     float3 viewDir = normalize(input.viewDirWS);
-    float4 normalTS = SAMPLE_TEXTURE2D(_NormalTex,sampler_NormalTex,input.uv);
+    float4 normalTS = SAMPLE_TEXTURE2D(_NormalTex,sampler_NormalTex,input.uv*_NormalTex_ST.xy+_NormalTex_ST.zw);
     normalTS.xyz = UnpackNormal(normalTS);
     float3 normal = TransformTangentToWorld(normalTS,half3x3(input.tangentWS.xyz,input.BtangentWS.xyz,input.normalWS.xyz));
     normal = normalize(normal.xyz);
-
-
 
     float4 col = Billy_PBS_Lighting(brdfData,normal,viewDir,input.normalWS.xyz,mainlight);
     half3 additionalLightsSumResult = 0;

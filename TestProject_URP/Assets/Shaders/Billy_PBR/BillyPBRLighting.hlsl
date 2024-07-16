@@ -29,22 +29,22 @@
         float3 directdiffuse = brdfData.diffuse*kd*NdotL*light.color*shadow;
 
         float mip_roughness = (brdfData.perceptualRoughness * (1.7 - 0.7 * brdfData.perceptualRoughness))*UNITY_SPECCUBE_LOD_STEPS;
-        brdfData.ao *= HorizonOcclusion(reflDir,normal,vertexNormal,_HorizonFade);
-        half specularAO = computeSpecOcclusion(NdotV , brdfData.ao , brdfData.roughness);
+        brdfData.ao = min(HorizonOcclusion(reflDir,normal,vertexNormal,_HorizonFade),brdfData.ao); // 待思考
+
         float4 encodedIrradiance  = SAMPLE_TEXTURECUBE_LOD(unity_SpecCube0,samplerunity_SpecCube0,reflDir,mip_roughness);
         float3 irradianceEnv = DecodeHDREnvironment(encodedIrradiance, unity_SpecCube0_HDR);
-        irradianceEnv *= HorizonOcclusion(reflDir,normal,vertexNormal,_HorizonFade)*specularAO;   
         float3 irKs = fresnelSchlickRoughness(NdotV,brdfData.reflectivity,brdfData.roughness);
         float3 irKd = (1.0 - irKs);
         #ifdef _IBLBRDFMODE_UE4_BRDFAPPROX
                 float2 iblSPecularBrdf = EnvBRDFApprox(brdfData.perceptualRoughness,NdotV);
-                float3 indirectSpecular = irradianceEnv*(brdfData.reflectivity * iblSPecularBrdf.x + iblSPecularBrdf.y)*brdfData.ao;
+                float3 indirectSpecular = irradianceEnv*(brdfData.reflectivity * iblSPecularBrdf.x + iblSPecularBrdf.y);
         #else
                 float2 envBRDF = SAMPLE_TEXTURE2D(_BRDFLUT, sampler_BRDFLUT,float2(NdotV,brdfData.perceptualRoughness)).rg;
-                float3 indirectSpecular = irradianceEnv*(irKs *envBRDF.x+envBRDF.y)*brdfData.ao;
+                float3 indirectSpecular = irradianceEnv*(irKs *envBRDF.x+envBRDF.y);
         #endif
 
         float3 indirectDiffuse = brdfData.diffuse*SampleSH(normal)*irKd*brdfData.ao;
+        indirectSpecular *= computeSpecOcclusion(NdotV , brdfData.ao , brdfData.roughness);
 
         float3 col = 0.0.xxx;
         col = directdiffuse+ directspecular+indirectDiffuse+indirectSpecular;

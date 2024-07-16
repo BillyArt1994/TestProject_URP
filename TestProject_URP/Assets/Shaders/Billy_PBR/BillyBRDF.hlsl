@@ -20,7 +20,7 @@ inline void InitializeBRDFData(float3 albedo , float ao,float roughness,float me
     half dielectricSpec = 0.16*reflectance*reflectance;
     outBRDFData.diffuse = albedo*(1-metallic);
     outBRDFData.perceptualRoughness = roughness;
-    outBRDFData.roughness = max(outBRDFData.perceptualRoughness*outBRDFData.perceptualRoughness,0.0078125);
+    outBRDFData.roughness = max(outBRDFData.perceptualRoughness*outBRDFData.perceptualRoughness,0.0002);
     outBRDFData.reflectivity = lerp(dielectricSpec,albedo,metallic);
     outBRDFData.emissive = emissive;
     outBRDFData.ao = ao;

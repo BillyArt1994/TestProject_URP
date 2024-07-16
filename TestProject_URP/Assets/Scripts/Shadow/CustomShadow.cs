@@ -23,15 +23,11 @@ public class CustomShadow : MonoBehaviour
     public Light m_light;
     public float m_radius = 1f;
     public float m_sceneCaptureDistance = 0f;
-    //[Range(0.0f, 5.0f)]
-    //public float m_depthBias = 0.1f;
-    //[Range(0.0f, 5.0f)]
-    //public float m_filterScale = 1.0f;
     CustomShadowCasterFeature m_customShadow;
     private bool dirty = true;
     const string CUSTOM_SHADOW_KW = "_CUSTOM_SHADOW";
     public static CustomShadow m_Instance;
-
+  
     public enum TexSize
     {
         _64 = 1 << 6,
@@ -63,7 +59,6 @@ public class CustomShadow : MonoBehaviour
         SetFocus();
     }
 
-
     void OnEnable()
     {
         m_customShadow = CustomShadowCasterFeature.m_Instance;
@@ -71,10 +66,11 @@ public class CustomShadow : MonoBehaviour
         {
             SetKeyWord(m_target, CUSTOM_SHADOW_KW, true);
         }
-
         m_customShadow.Init((int)m_shadowMapSize, (int)m_shadowMapSize);
-        //SetFocus();
+        dirty = true;
+        SetFocus();
     }
+
     private void OnDisable()
     {
         if (m_target != null)
@@ -85,15 +81,20 @@ public class CustomShadow : MonoBehaviour
 
     void OnValidate()
     {
-        if (!this.enabled || m_customShadow == null) return;
-        SetFocus();
+        if (!this.enabled || m_customShadow == null) return;  
         m_customShadow.Init((int)m_shadowMapSize, (int)m_shadowMapSize);
         if (m_target != null && m_target != m_targetTemp)
         {
             SetKeyWord(m_target, CUSTOM_SHADOW_KW, true);
-            SetKeyWord(m_targetTemp, CUSTOM_SHADOW_KW, false);
+            if (m_target != null) 
+            {
+                SetKeyWord(m_targetTemp, CUSTOM_SHADOW_KW, false);
+            }
+            
             m_targetTemp = m_target;
         }
+        dirty = true;
+        SetFocus();
     }
 
     public void SetFocus()
@@ -218,8 +219,8 @@ public class CustomShadow : MonoBehaviour
     /// <param name=""></param>
     void SetKeyWord(Transform transf, string keyWord, bool flag)
     {
-        Renderer[] meshRenders = m_target.GetComponentsInChildren<MeshRenderer>();
-        Renderer[] skinMeshRenders = m_target.GetComponentsInChildren<SkinnedMeshRenderer>();
+        Renderer[] meshRenders = transf.GetComponentsInChildren<MeshRenderer>();
+        Renderer[] skinMeshRenders = transf.GetComponentsInChildren<SkinnedMeshRenderer>();
         Renderer[] tempMeshRenders = new Renderer[meshRenders.Length+ skinMeshRenders.Length];
         meshRenders.CopyTo(tempMeshRenders, 0);
         skinMeshRenders.CopyTo(tempMeshRenders, meshRenders.Length);
@@ -228,6 +229,8 @@ public class CustomShadow : MonoBehaviour
             var mats = mr.sharedMaterials;
             foreach (var mat in mats)
             {
+                if (flag == mat.IsKeywordEnabled(CUSTOM_SHADOW_KW))
+                    continue;
                 if (flag)
                 {
                     mat.EnableKeyword(CUSTOM_SHADOW_KW);

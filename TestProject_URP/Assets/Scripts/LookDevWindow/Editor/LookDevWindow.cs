@@ -20,8 +20,8 @@ public class LookDevWindow : EditorWindow
         DirectionSpecular = 1 << 6,
         IndirectionDiffuse = 1 << 7,
         IndirectionSpecular = 1 << 8,
-        Shadow = 1 << 9
-
+        Shadow = 1 << 9,
+        TextureDensity = 1 << 10
     }
 
     public int m_rotate = 0;
@@ -82,6 +82,7 @@ public class LookDevWindow : EditorWindow
             if (m_turnTableFlag == true)
             {
                 //EditorApplication.update += TurnTable;
+                SceneView.duringSceneGui -= TurnTable;
                 SceneView.duringSceneGui += TurnTable;
             }
             else if(m_turnTableFlag == false)
@@ -116,11 +117,33 @@ public class LookDevWindow : EditorWindow
         {
             m_turntable.Rotate(Vector3.up, m_speed * Time.deltaTime, Space.World);
         }
-        sceneView.Repaint();
+   
     }
 
     void ViewDisplayElement(DisplayerElement elem)
     {
+        if (elem == DisplayerElement.TextureDensity)
+        {
+            
+            Texture2D mipmapChecker = EditorGUIUtility.Load("Assets/Textures/ColorCheck/TextureDensityCheck.dds") as Texture2D;
+            Shader.SetGlobalTexture("_CheckTex", mipmapChecker);
+
+            foreach (UnityEditor.SceneView view in UnityEditor.SceneView.sceneViews)
+            {                
+                view.SetSceneViewShaderReplace(Shader.Find("Unlit/DensityVisualization"), "RenderType");
+            }
+
+
+        }
+        else
+        {
+            Shader.SetGlobalTexture("_CheckTex", null);
+            foreach (UnityEditor.SceneView view in UnityEditor.SceneView.sceneViews)
+            {
+                view.SetSceneViewShaderReplace(null, "RenderType");
+            }
+        }
+
         Shader.SetKeyword(GlobalKeyword.Create("_ALBEDO_DISPLAYER"), elem == DisplayerElement.Albedo);
         Shader.SetKeyword(GlobalKeyword.Create("_METALLIC_DISPLAYER"), elem == DisplayerElement.Metallic);
         Shader.SetKeyword(GlobalKeyword.Create("_ROUNGHNESS_DISPLAYER"), elem == DisplayerElement.Rounghness);
