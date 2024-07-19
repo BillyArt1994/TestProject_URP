@@ -39,9 +39,7 @@
 
         half3 diffuseBrdf = SAMPLE_TEXTURE2D(_SkinBrdfLUT,sampler_SkinBrdfLUT,half2(NdotL_low*0.5+0.5,curvatureScaled));
         thickness *=_DeepScale;
-        //#if defined(THICKNESS)
-        //return thickness ;
-        //#endif
+
         float transmittance = exp2(_DeepScatterFalloff * thickness * thickness);
         float minusNDotL = -dot(NdotL_low, light.direction);
         transmittance *= saturate(minusNDotL + 0.3);
@@ -50,12 +48,10 @@
         float3 kd = (1-F);
 
         float3 directdiffuse = brdfData.diffuse*rgbShadow*kd*diffuseBrdf*light.distanceAttenuation*light.color;
-        //directdiffuse += brdfData.diffuse*transmittance*_TranslucencyColor*light.color;
-
         float3 directspecular = (D1*1.5+D2*0.5)*F*G*PI*NdotL*light.distanceAttenuation *light.color*rgbShadow;
 
         float mip_roughness = (brdfData.perceptualRoughness * (1.7 - 0.7 * brdfData.perceptualRoughness))*UNITY_SPECCUBE_LOD_STEPS;
-        brdfData.ao *= HorizonOcclusion(reflDir,normal,vertexNormal,_HorizonFade);
+        brdfData.ao = min(HorizonOcclusion(reflDir,normal,vertexNormal,_HorizonFade),brdfData.ao);
         half specularAO = computeSpecOcclusion(NdotV , brdfData.ao , brdfData.roughness);
         float4 encodedIrradiance  = SAMPLE_TEXTURECUBE_LOD(unity_SpecCube0,samplerunity_SpecCube0,reflDir,mip_roughness);
         float3 irradianceEnv = DecodeHDREnvironment(encodedIrradiance, unity_SpecCube0_HDR);

@@ -83,10 +83,10 @@ public class CustomShadow : MonoBehaviour
     {
         if (!this.enabled || m_customShadow == null) return;  
         m_customShadow.Init((int)m_shadowMapSize, (int)m_shadowMapSize);
-        if (m_target != null && m_target != m_targetTemp)
+        if (m_target != null && m_target != m_targetTemp )
         {
             SetKeyWord(m_target, CUSTOM_SHADOW_KW, true);
-            if (m_target != null) 
+            if (m_targetTemp != null) 
             {
                 SetKeyWord(m_targetTemp, CUSTOM_SHADOW_KW, false);
             }
@@ -216,7 +216,6 @@ public class CustomShadow : MonoBehaviour
     /// <summary>
     /// Set KeyWord Form input Transform include all childer node
     /// </summary>
-    /// <param name=""></param>
     void SetKeyWord(Transform transf, string keyWord, bool flag)
     {
         Renderer[] meshRenders = transf.GetComponentsInChildren<MeshRenderer>();

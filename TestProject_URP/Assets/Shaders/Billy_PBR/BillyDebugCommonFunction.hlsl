@@ -3,6 +3,7 @@
 
 float3 CheckColorValue(float3 color, float targetValue, float targetScale, float range)
 {
+    targetScale = 1.0;
     targetValue *= targetScale;
     float lum = dot(color, float3(0.2126729, 0.7151522, 0.072175));
     float3 outColor;

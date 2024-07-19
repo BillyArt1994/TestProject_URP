@@ -39,10 +39,10 @@ Shader "Billy/Skin"
         _CullMode ("Cull Mode", Float) = 2
         _Cutoff("Cut Off",Range(0.0,1.0)) = 0.0
         [KeywordEnum(UE4_BRDFApprox,Pre_Integration)] _IBLBrdfMode ("IBL Specular BRDF Mode",float) = 1.0
-		[Toggle(_CHECKVALUE)]_CheckValue("> Measure The Output Value", Float) = 0
-        _ChkTargetValue(" ORANGE-GREEN-BLUE", Range(-0.1, 5.0)) = 0.1842
-        [Enum(x0.01,0.01, x0.1,0.1, x1,1.0, x10,10.0, x100,100.0, x1000,1000.0, x10000,10000.0)]_ChkTargetScale("    (Higher - Hit - Lower)", Range( 0.001, 1000.0)) = 1.0
-        [PowerSlider(2.0)]_ChkRange(" Tolerance", Range(0.0032, 10.0)) = 0.045
+		//[Toggle(_CHECKVALUE)]_CheckValue("> Measure The Output Value", Float) = 0
+        //_ChkTargetValue(" ORANGE-GREEN-BLUE", Range(-0.1, 5.0)) = 0.1842
+        //[Enum(x0.01,0.01, x0.1,0.1, x1,1.0, x10,10.0, x100,100.0, x1000,1000.0, x10000,10000.0)]_ChkTargetScale("    (Higher - Hit - Lower)", Range( 0.001, 1000.0)) = 1.0
+        //[PowerSlider(2.0)]_ChkRange(" Tolerance", Range(0.0032, 10.0)) = 0.045
     }
     SubShader
     {
@@ -76,6 +76,7 @@ Shader "Billy/Skin"
             #pragma shader_feature _ _AO_DISPLAYER
             #pragma shader_feature _ _NORMAL_DISPLAYER
             #pragma shader_feature _ _SHADOW_DISPLAYER
+            #pragma shader_feature _ _MIPMAP_DISPLAYER
             #pragma multi_compile  _IBLBRDFMODE_UE4_BRDFAPPROX _IBLBRDFMODE_PRE_INTEGRATION
             #pragma shader_feature_local _ _MRAE_MAP_ENABLED
             #pragma shader_feature_local _ _DITHER_ENABLED

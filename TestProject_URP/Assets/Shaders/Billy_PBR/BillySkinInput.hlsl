@@ -30,6 +30,17 @@
     float _DeepScale;
     float _CurvatureFactore;
 
+#ifdef _CHECKVALUE
+    float _ChkTargetValue;
+    float _ChkTargetScale;
+    float _ChkRange;
+#endif
+
+#ifdef _MIPMAP_DISPLAYER
+    sampler2D _CheckTex;
+    float4 _Albedo_TexelSize;
+#endif
+
     sampler2D _BeckManTex;
 
     TEXTURE2D(_Curvature);       SAMPLER(sampler_Curvature);

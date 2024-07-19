@@ -38,6 +38,7 @@ namespace CommonShaderGUI
         protected MaterialProperty reflectivity { get; set; }
         protected MaterialProperty roughness { get; set; }
         protected MaterialProperty ao { get; set; }
+        protected MaterialProperty normalMapEnabled { get; set; }
         protected MaterialProperty normal { get; set; }
         protected MaterialProperty anisotropic { get; set; }
         protected MaterialProperty horizonFade { get; set; }
@@ -65,6 +66,7 @@ namespace CommonShaderGUI
             public static readonly string _Albedo = nameof(_Albedo);
             public static readonly string _Tint = nameof(_Tint);
             public static readonly string _MRAEMapEnabled = nameof(_MRAEMapEnabled);
+            public static readonly string _NORMALMapEnabled = nameof(_NORMALMapEnabled);
             public static readonly string _MRAEMap = nameof(_MRAEMap);
             public static readonly string _Metalic = nameof(_Metalic);
             public static readonly string _Reflectivity = nameof(_Reflectivity);
@@ -100,6 +102,7 @@ namespace CommonShaderGUI
             bentNormal = FindProperty(BillyShaderBaseProperties._Bentnormal, props, false);
             tint = FindProperty(BillyShaderBaseProperties._Tint, props, false);
             mraeMapEnabled = FindProperty(BillyShaderBaseProperties._MRAEMapEnabled, props, false);
+            normalMapEnabled = FindProperty(BillyShaderBaseProperties._NORMALMapEnabled, props, false);
             bentNormalEnabled = FindProperty(BillyShaderBaseProperties._BentnormalEnabled, props, false);
             metalic = FindProperty(BillyShaderBaseProperties._Metalic, props, false);
             reflectivity = FindProperty(BillyShaderBaseProperties._Reflectivity, props, false);
@@ -119,10 +122,10 @@ namespace CommonShaderGUI
             show_indirectSpecular = FindProperty(BillyShaderBaseProperties._IndirectSpecular, props, false);
             IBL_BrdfMode = FindProperty(BillyShaderBaseProperties._IBLBrdfMode, props, false);
             anisotropic = FindProperty(BillyShaderBaseProperties._Anisotropic, props, false);
-            CheckValue = FindProperty(BillyShaderBaseProperties._CheckValue, props, false);
-            ChkTargetValue = FindProperty(BillyShaderBaseProperties._ChkTargetValue, props, false);
-            ChkTargetScale = FindProperty(BillyShaderBaseProperties._ChkTargetScale, props, false);
-            ChkRange = FindProperty(BillyShaderBaseProperties._ChkRange, props, false);
+            //CheckValue = FindProperty(BillyShaderBaseProperties._CheckValue, props, false);
+            //ChkTargetValue = FindProperty(BillyShaderBaseProperties._ChkTargetValue, props, false);
+            //ChkTargetScale = FindProperty(BillyShaderBaseProperties._ChkTargetScale, props, false);
+            //ChkRange = FindProperty(BillyShaderBaseProperties._ChkRange, props, false);
         }
 
         public override void OnGUI(MaterialEditor materialEditor, MaterialProperty[] properties)
@@ -189,12 +192,18 @@ namespace CommonShaderGUI
         public virtual void DrawSurfacePropertise(Material material)
         {
             EditorGUILayout.BeginVertical("Box");
-            m_editor.TextureProperty(normal, "Normal Map");
+            m_editor.ShaderProperty(normalMapEnabled, "Normal Map Enabled");
+            if (material.GetFloat("_NORMALMapEnabled") != 0)
+            {
+
+                m_editor.TextureProperty(normal, "Normal Map");
+            }
             EditorGUILayout.EndVertical();
             EditorGUILayout.Space();
             EditorGUILayout.BeginVertical("Box");
             m_editor.ShaderProperty(mraeMapEnabled, "MRAE Map Enabled");
             EditorGUILayout.Space();
+
             if (material.GetFloat("_MRAEMapEnabled") != 0)
             {
 
@@ -229,12 +238,12 @@ namespace CommonShaderGUI
             EditorGUILayout.BeginVertical("Box");
             m_editor.ShaderProperty(IBL_BrdfMode, "IBL SpecularBrdf Mode");
             EditorGUILayout.EndVertical();
-            EditorGUILayout.BeginVertical("Box");
-            m_editor.ShaderProperty(CheckValue, "> Measure The Output Value");
-            m_editor.ShaderProperty(ChkTargetValue, "ORANGE-GREEN-BLUE");
-            m_editor.ShaderProperty(ChkTargetScale, "(Higher - Hit - Lower)");
-            m_editor.ShaderProperty(ChkRange, "Tolerance");
-            EditorGUILayout.EndVertical();
+            //EditorGUILayout.BeginVertical("Box");
+            //m_editor.ShaderProperty(CheckValue, "> Measure The Output Value");
+            //m_editor.ShaderProperty(ChkTargetValue, "ORANGE-GREEN-BLUE");
+            //m_editor.ShaderProperty(ChkTargetScale, "(Higher - Hit - Lower)");
+            //m_editor.ShaderProperty(ChkRange, "Tolerance");
+            //EditorGUILayout.EndVertical();
         }
 
         public virtual void RefreshKeywords()
@@ -274,17 +283,17 @@ namespace CommonShaderGUI
                     m_materials.DisableKeyword("_ALPHACLIP_ENABLED");
                 }
             }
-            if (m_materials.HasProperty("_CHECKVALUE"))
-            {
-                if (m_materials.GetFloat("_CHECKVALUE") != 0)
-                {
-                    m_materials.EnableKeyword("_CHECKVALUE");
-                }
-                else
-                {
-                    m_materials.DisableKeyword("_CHECKVALUE");
-                }
-            }
+            //if (m_materials.HasProperty("_CHECKVALUE"))
+            //{
+            //    if (m_materials.GetFloat("_CHECKVALUE") != 0)
+            //    {
+            //        m_materials.EnableKeyword("_CHECKVALUE");
+            //    }
+            //    else
+            //    {
+            //        m_materials.DisableKeyword("_CHECKVALUE");
+            //    }
+            //}
         }
 
         public virtual void SetDefaultTexture()

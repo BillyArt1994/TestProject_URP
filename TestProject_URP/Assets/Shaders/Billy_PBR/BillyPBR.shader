@@ -4,6 +4,7 @@
     {
         _Tint("Tint",COLOR) = (1.0,1.0,1.0,1.0)
         _Albedo("Albedo",2D) = "white"{}
+        [Toggle(_NORMAL_MAP_ENABLED)] _NORMALMapEnabled("Normal Map Enabled", Float) = 0
         [Normal]_NormalTex("Normal",2D) = "bump"{}
         [Toggle(_MRAE_MAP_ENABLED)] _MRAEMapEnabled("MRAE Map Enabled", Float) = 0
         _MRAEMap("MRAE Map", 2D) = "black" {}
@@ -28,10 +29,10 @@
         
         [KeywordEnum(UE4_BRDFApprox,Pre_Integration)] _IBLBrdfMode ("IBL Specular BRDF Mode",float) = 1.0
 
-		[Toggle(_CHECKVALUE)]_CheckValue("> Measure The Output Value", Float) = 0
-        _ChkTargetValue(" ORANGE-GREEN-BLUE", Range(-0.1, 5.0)) = 0.1842
-        [Enum(x0.01,0.01, x0.1,0.1, x1,1.0, x10,10.0, x100,100.0, x1000,1000.0, x10000,10000.0)]_ChkTargetScale("    (Higher - Hit - Lower)", Range( 0.001, 1000.0)) = 1.0
-        [PowerSlider(2.0)]_ChkRange(" Tolerance", Range(0.0032, 10.0)) = 0.045
+		//[Toggle(_CHECKVALUE)]_CheckValue("> Measure The Output Value", Float) = 0
+       //_ChkTargetValue(" ORANGE-GREEN-BLUE", Range(-0.1, 5.0)) = 0.1842
+       //[Enum(x0.01,0.01, x0.1,0.1, x1,1.0, x10,10.0, x100,100.0, x1000,1000.0, x10000,10000.0)]_ChkTargetScale("    (Higher - Hit - Lower)", Range( 0.001, 1000.0)) = 1.0
+       //[PowerSlider(2.0)]_ChkRange(" Tolerance", Range(0.0032, 10.0)) = 0.045
     }
     SubShader
     {
@@ -39,8 +40,10 @@
         Tags 
         {
          "RenderType"="Opaque"
-         "LightMode" = "UniversalForward"
+         
         }
+        ZWrite On
+        ZTest LEqual
         Cull [_CullMode]
 
         Pass
@@ -62,8 +65,10 @@
             #pragma shader_feature _ _AO_DISPLAYER
             #pragma shader_feature _ _NORMAL_DISPLAYER
             #pragma shader_feature _ _SHADOW_DISPLAYER
+            #pragma shader_feature _ _MIPMAP_DISPLAYER
             #pragma multi_compile  _IBLBRDFMODE_UE4_BRDFAPPROX _IBLBRDFMODE_PRE_INTEGRATION
             #pragma shader_feature_local _ _MRAE_MAP_ENABLED _BENTNORMAL_ENABLED
+            #pragma shader_feature_local _ _NORMAL_MAP_ENABLED
             #pragma shader_feature_local _ _DITHER_ENABLED
             #pragma shader_feature_local _ _ALPHACLIP_ENABLED
             #pragma multi_compile_fragment _ _SHADOWS_SOFT

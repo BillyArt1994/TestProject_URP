@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.UIElements;
@@ -21,7 +22,9 @@ public class LookDevWindow : EditorWindow
         IndirectionDiffuse = 1 << 7,
         IndirectionSpecular = 1 << 8,
         Shadow = 1 << 9,
-        TextureDensity = 1 << 10
+        TextureDensity = 1 << 10,
+        RequiredTextureResolution = 1 << 12,
+        ExposureFalseColor = 1 << 13
     }
 
     public int m_rotate = 0;
@@ -36,6 +39,8 @@ public class LookDevWindow : EditorWindow
     public Transform m_turntable;
     public float m_speed = 1.0f;
     public DisplayerElement m_displayElem;
+    public float m_checkTargetValue = 0.18f;
+    public float m_checkValueRange = 0.02f;
 
 
     [MenuItem("Window/Look Dev")]
@@ -67,6 +72,25 @@ public class LookDevWindow : EditorWindow
         m_turntable = (Transform)EditorGUILayout.ObjectField(m_turntable, typeof(Transform), true);
         m_speed = EditorGUILayout.FloatField("速度",m_speed);
         m_displayElem = (DisplayerElement)EditorGUILayout.EnumPopup("View Mode", m_displayElem);
+        if (m_displayElem == DisplayerElement.RequiredTextureResolution)
+        {
+            GUI.color = Color.red;
+            EditorGUILayout.LabelField("红色:代表当前主贴图尺寸对于当前屏幕像素过大,纹理密度过大");
+            GUI.color = new Color(255.0f, 64.0f, 0.0f);
+            EditorGUILayout.LabelField("橙色:代表当前主贴图尺寸对于当前屏幕像素稍大,纹理密度稍大");
+            GUI.color = Color.white;
+            EditorGUILayout.LabelField("正常渲染:代表当前主贴图尺寸对于当前屏幕像素匹配,纹理密度合理");
+            GUI.color = new Color(0.0f, 255.0f, 255.0f);
+            EditorGUILayout.LabelField("蓝色:代表当前主贴图尺寸对于当前屏幕像素稍小,纹理密度稍小");
+            GUI.color = new Color(0.0f,0.0f, 255.0f);
+            EditorGUILayout.LabelField("紫色:代表当前主贴图尺寸对于当前屏幕像素过小,纹理密度过小");
+        }
+        if (m_displayElem == DisplayerElement.ExposureFalseColor)
+        {
+            m_checkTargetValue = EditorGUILayout.FloatField("Check Target Value", m_checkTargetValue);
+            m_checkValueRange = EditorGUILayout.FloatField("Check Value Range", m_checkValueRange);
+        }
+
         OnInspectorUpdate();
     }
 
@@ -125,19 +149,33 @@ public class LookDevWindow : EditorWindow
         if (elem == DisplayerElement.TextureDensity)
         {
             
-            Texture2D mipmapChecker = EditorGUIUtility.Load("Assets/Textures/ColorCheck/TextureDensityCheck.dds") as Texture2D;
+            Texture2D mipmapChecker = EditorGUIUtility.Load("Assets/Textures/ColorCheck/2048_TextureDensityCheck.dds") as Texture2D;
             Shader.SetGlobalTexture("_CheckTex", mipmapChecker);
 
             foreach (UnityEditor.SceneView view in UnityEditor.SceneView.sceneViews)
             {                
-                view.SetSceneViewShaderReplace(Shader.Find("Unlit/DensityVisualization"), "RenderType");
+                view.SetSceneViewShaderReplace(Shader.Find("Billy/Debug/DensityVisualization"), null);
             }
 
 
         }
+        else if (elem == DisplayerElement.RequiredTextureResolution)
+        {
+            foreach (UnityEditor.SceneView view in UnityEditor.SceneView.sceneViews)
+            {
+                view.SetSceneViewShaderReplace(null, "RenderType");
+            }
+
+            Texture2D mipmapChecker = EditorGUIUtility.Load("Assets/Textures/ColorCheck/MipMapColorCheck.dds") as Texture2D;
+            Shader.SetGlobalTexture("_CheckTex", mipmapChecker);
+            Shader.SetKeyword(GlobalKeyword.Create("_MIPMAP_DISPLAYER"), true);
+
+        }
+
         else
         {
             Shader.SetGlobalTexture("_CheckTex", null);
+            Shader.SetKeyword(GlobalKeyword.Create("_MIPMAP_DISPLAYER"), false);
             foreach (UnityEditor.SceneView view in UnityEditor.SceneView.sceneViews)
             {
                 view.SetSceneViewShaderReplace(null, "RenderType");
@@ -154,5 +192,9 @@ public class LookDevWindow : EditorWindow
         Shader.SetKeyword(GlobalKeyword.Create("_DIRECTSPECULAR_DISPLAYER"), elem == DisplayerElement.DirectionSpecular);
         Shader.SetKeyword(GlobalKeyword.Create("_INDIRECTDIFFUSE_DISPLAYER"), elem == DisplayerElement.IndirectionDiffuse);
         Shader.SetKeyword(GlobalKeyword.Create("_INDIRECTSPECULAR_DISPLAYER"), elem == DisplayerElement.IndirectionSpecular);
+        
+        Shader.SetKeyword(GlobalKeyword.Create("_CHECKVALUE"), elem == DisplayerElement.ExposureFalseColor);
+        Shader.SetGlobalFloat("_ChkTargetValue", m_checkTargetValue);
+        Shader.SetGlobalFloat("_ChkRange", m_checkValueRange);
     }
 }

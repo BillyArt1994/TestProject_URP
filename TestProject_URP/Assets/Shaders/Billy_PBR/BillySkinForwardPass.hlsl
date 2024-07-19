@@ -4,6 +4,7 @@
 #include "BillySkinLighting.hlsl"
 #include "BillySkinInput.hlsl"
 #include "BillyCommonFunction.hlsl"
+#include "BillyDebugCommonFunction.hlsl"
 
 struct Attributes
 {
@@ -23,6 +24,9 @@ struct Varyings
     float4 shadowCoord   : TEXCOORD6;
     float4 positionCS    : SV_POSITION;
     float4 screenPos : TEXCOORD8;
+    #ifdef _MIPMAP_DISPLAYER
+    float2 uv_Check         :TEXCOORD9;
+    #endif 
 };
 
 Varyings PBRPassVertex (Attributes input)
@@ -39,6 +43,12 @@ Varyings PBRPassVertex (Attributes input)
     output.shadowCoord = GetShadowCoord(vertexInput);
     output.uv = input.texcoord;
     output.screenPos = ComputeScreenPos(vertexInput.positionCS);
+    #ifdef _MIPMAP_DISPLAYER
+    // 128 is check tex size,divide 128 is to macth checkTex size to AlbedoTex size and to get unity texture density
+    // *8 is to push the mipmap 3 level down
+    output.uv_Check = (input.texcoord*_Albedo_ST.xy+_Albedo_ST.zw)*(_Albedo_TexelSize.zw/128*8);
+    #endif
+
     return output;
 }
 
@@ -59,6 +69,14 @@ float4 PBRPassFragment (Varyings input) : SV_Target
     roughness = _Roughness;
     metalic = _Metalic;
     emissive = 1.0;
+    #endif
+
+    #ifdef _CHECKVALUE
+    albedo.xyz = float3(0.18,0.18,0.18);
+    ao = 1.0;
+    roughness = 1.0;
+    metalic = 0.0;
+    emissive = 0.0;
     #endif
 
     float deltaWorldNormal = fwidth(input.normalWS);// length(abs(ddx(normalInput.normalWS))+abs(ddy(normalInput.normalWS)));
@@ -105,6 +123,11 @@ float4 PBRPassFragment (Varyings input) : SV_Target
     #endif
 
     col.xyz += additionalLightsSumResult;
+
+    #ifdef _CHECKVALUE
+    col.xyz = CheckColorValue(col.xyz, _ChkTargetValue, _ChkTargetScale, _ChkRange);
+    #endif
+
     #if _ALPHACLIP_ENABLED
         #ifdef _DITHER_ENABLED
         float2 screen_uv = input.screenPos.xy/input.screenPos.w;
@@ -129,6 +152,11 @@ float4 PBRPassFragment (Varyings input) : SV_Target
     #endif
     #if defined(_NORMAL_DISPLAYER)
     col = half4(normal,1.0);
+    #endif
+
+    #if defined(_MIPMAP_DISPLAYER)
+    float4 checkColor = tex2D(_CheckTex,input.uv_Check);
+    col.xyz = lerp(col,checkColor.xyz,checkColor.a);
     #endif
 
     return half4(col,1.0);
