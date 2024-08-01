@@ -15,10 +15,11 @@ public class CustomShadowLightHelper : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void LateUpdate()
     {
         if (transform.hasChanged)
         {
+            CustomShadow.m_Instance.SetDirty();
             CustomShadow.m_Instance.SetFocus();
             transform.hasChanged = false;
         }

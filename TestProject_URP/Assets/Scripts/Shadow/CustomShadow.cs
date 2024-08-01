@@ -241,6 +241,10 @@ public class CustomShadow : MonoBehaviour
             }
         }
     }
+    public void SetDirty()
+    {
+        dirty = true;
+    }
 
 #if UNITY_EDITOR
     [MenuItem("GameObject/LobbyCharacterRender/CustomShadow", false, 10)]

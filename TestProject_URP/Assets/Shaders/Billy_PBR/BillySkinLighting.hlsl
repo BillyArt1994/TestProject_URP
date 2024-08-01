@@ -9,7 +9,7 @@
     float3 Billy_Skin_Lighting(BillyBRDFData brdfData,float3 normal,float3 viewDir,float curvature,float thickness,float3 vertexNormal,Light light)
     {
         half shadow = max(light.shadowAttenuation,0.0);
-        //shadow = ApplyMicroShadow(brdfData.ao,normal,light.direction,shadow);
+        shadow = ApplyMicroShadow(brdfData.ao,normal,light.direction,shadow);
         float3 halfDir = normalize(light.direction+viewDir);
         float3 reflDir = reflect(-viewDir, normal);
         float NdotLRaw = dot(normal,light.direction);
@@ -38,16 +38,27 @@
         half3 rgbNdotL = half3(saturate(NdotL_low) ,NdotLShadeG,NdotLShadeB);
 
         half3 diffuseBrdf = SAMPLE_TEXTURE2D(_SkinBrdfLUT,sampler_SkinBrdfLUT,half2(NdotL_low*0.5+0.5,curvatureScaled));
-        thickness *=_DeepScale;
+        
+        float t =  -0.7213475 / (0.6/0.6);
+        float transmittance = exp2(t * thickness * thickness);//exp2(_DeepScatterFalloff * thickness * thickness*_DeepScale);
+        
+        //return transmittance;
 
-        float transmittance = exp2(_DeepScatterFalloff * thickness * thickness);
-        float minusNDotL = -dot(NdotL_low, light.direction);
+        float minusNDotL = -NdotL_low;
         transmittance *= saturate(minusNDotL + 0.3);
+        //return thickness;
+        
+
+        _TranslucencyColor *= _DeepScatteIntensity;
+        float3 transm= _DeepScatteIntensity*transmittance*_TranslucencyColor*brdfData.diffuse*light.color;
 
         half3 rgbShadow = SAMPLE_TEXTURE2D(_ShadowBrdfLUT,sampler_ShadowBrdfLUT,half2(shadow,NdotL_low*_ShadowScaleBias.x+_ShadowScaleBias.y));
+        rgbShadow = shadow* saturate(((NdotLRaw*0.5+0.5)*2)*2-1)*diffuseBrdf;//saturate(((NdotLRaw*0.5+0.5)*2)*2-1)*diffuseBrdf;
+        //return rgbShadow;
         float3 kd = (1-F);
 
         float3 directdiffuse = brdfData.diffuse*rgbShadow*kd*diffuseBrdf*light.distanceAttenuation*light.color;
+        
         float3 directspecular = (D1*1.5+D2*0.5)*F*G*PI*NdotL*light.distanceAttenuation *light.color*rgbShadow;
 
         float mip_roughness = (brdfData.perceptualRoughness * (1.7 - 0.7 * brdfData.perceptualRoughness))*UNITY_SPECCUBE_LOD_STEPS;
@@ -71,15 +82,17 @@
 
         float3 indirectDiffuse;
         float3 ambientMN = normalize(lerp(normal,N_low,0.3)) ;
-        half3 bleedAO = pow(abs(brdfData.ao),1.0- half3(0.4,0.15,0.13));
-
-        indirectDiffuse = brdfData.diffuse*(SampleSH(normal))*brdfData.ao;
-        indirectDiffuse.r = (brdfData.diffuse*(SampleSH(N_low))*brdfData.ao).r;
-        indirectDiffuse.g = (brdfData.diffuse*(SampleSH(ambientMN))*brdfData.ao).g;
-        indirectDiffuse.b = (brdfData.diffuse*(SampleSH(normal))*brdfData.ao).b;
+        half3 bleedAO = pow(brdfData.ao,1.0- half3(0.6,0.15,0.13));
+        
+        indirectDiffuse = brdfData.diffuse*(SampleSH(normal));
+        
+      //  indirectDiffuse.r = (brdfData.diffuse*(SampleSH(N_low))*bleedAO).r;
+      //  indirectDiffuse.g = (brdfData.diffuse*(SampleSH(ambientMN))*bleedAO).g;
+      //  indirectDiffuse.b = (brdfData.diffuse*(SampleSH(normal))*bleedAO).b;
 
         float3 col = 0.0.xxx;
-        col = directdiffuse + directspecular+ indirectDiffuse ;
+        col = directdiffuse + directspecular+ indirectDiffuse +indirectSpecular;
+
 
         #if defined( _SHADOW_DISPLAYER)
         col = shadow;

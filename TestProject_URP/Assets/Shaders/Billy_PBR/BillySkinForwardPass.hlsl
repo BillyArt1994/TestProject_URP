@@ -93,9 +93,9 @@ float4 PBRPassFragment (Varyings input) : SV_Target
     float3 normal = TransformTangentToWorld(normalTS,half3x3(input.tangentWS.xyz,input.BtangentWS.xyz,input.normalWS.xyz));
     normal = normalize(normal.xyz);
 
-    #if defined(_CUSTOM_THICKNESS)
+    #if defined(_THICKFROMSHADOW_ENABLED)
     Light mainlight = GetMainLight(TransformWorldToShadowCoord(input.positionWS.xyz),input.normalWS.xyz);
-    thickness = mainlight.thickness;
+    thickness = saturate(mainlight.thickness) ;
     #else
     Light mainlight = GetMainLight(TransformWorldToShadowCoord(input.positionWS.xyz));
     #endif

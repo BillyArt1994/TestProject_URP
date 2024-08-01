@@ -27,6 +27,7 @@
     float4 _BRDFLUT_ST;
     float _Cutoff;
     float _DeepScatterFalloff;
+    float _DeepScatteIntensity;
     float _DeepScale;
     float _CurvatureFactore;
 

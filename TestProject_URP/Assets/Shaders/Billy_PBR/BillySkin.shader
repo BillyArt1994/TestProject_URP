@@ -29,6 +29,7 @@ Shader "Billy/Skin"
         _ShadowScaleBias("_ShadowScaleBias",float) = (1.0,0.0,0.0,0.0) 
         _DeepScale("DeepScale",float) = 1.0
         _DeepScatterFalloff("_DeepScatterFalloff",float) = 1.0
+        _DeepScatteIntensity("_DeepScatteIntensity",float) = 1.0
         _TranslucencyColor("_TranslucencyColor",COLOR) = (0.5,0.5,0.5,1.0)
 
         _CurvatureFactore("_CurvatureFactore",float) = 1.0
@@ -39,6 +40,8 @@ Shader "Billy/Skin"
         _CullMode ("Cull Mode", Float) = 2
         _Cutoff("Cut Off",Range(0.0,1.0)) = 0.0
         [KeywordEnum(UE4_BRDFApprox,Pre_Integration)] _IBLBrdfMode ("IBL Specular BRDF Mode",float) = 1.0
+        [Toggle(_THICKFROMSHADOW_ENABLED)] _ThickFromShadowEnabled("ThickFromShadow Enabled",Float) = 0.0
+
 		//[Toggle(_CHECKVALUE)]_CheckValue("> Measure The Output Value", Float) = 0
         //_ChkTargetValue(" ORANGE-GREEN-BLUE", Range(-0.1, 5.0)) = 0.1842
         //[Enum(x0.01,0.01, x0.1,0.1, x1,1.0, x10,10.0, x100,100.0, x1000,1000.0, x10000,10000.0)]_ChkTargetScale("    (Higher - Hit - Lower)", Range( 0.001, 1000.0)) = 1.0
@@ -85,6 +88,7 @@ Shader "Billy/Skin"
             #pragma multi_compile _ _ADDITIONAL_LIGHTS
             #pragma multi_compile_fragment _ _CUSTOM_THICKNESS
             #pragma multi_compile_local _ _CUSTOM_SHADOW
+            #pragma shader_feature_local _ _THICKFROMSHADOW_ENABLED
 
             #define _CUSTOM_THICKNESS 1
 
