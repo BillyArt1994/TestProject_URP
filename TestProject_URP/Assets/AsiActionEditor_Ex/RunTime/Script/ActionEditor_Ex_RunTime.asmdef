@@ -1,0 +1,18 @@
+{
+    "name": "ActionEditor_Ex_RunTime",
+    "rootNamespace": "",
+    "references": [
+        "GUID:72bbd18e87e026d4babf4b706d8f5382",
+        "GUID:50e5e300ee1bc8c458e7b4f757c29ab7",
+        "GUID:4307f53044263cf4b835bd812fc161a4"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

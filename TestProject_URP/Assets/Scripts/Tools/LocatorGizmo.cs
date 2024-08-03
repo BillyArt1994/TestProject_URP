@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
@@ -19,3 +20,4 @@ public class LocatorGizmo : MonoBehaviour
         Gizmos.DrawLine(transform.position- new Vector3(0.0f, 0.0f, m_size), transform.position + new Vector3(0.0f, 0.0f, m_size));
     }
 }
+#endif
