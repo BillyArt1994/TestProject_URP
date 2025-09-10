@@ -188,11 +188,6 @@ public class UniqueShadow : MonoBehaviour
         transform.rotation = rot;
         m_ShadowCaster.Transform(pos, rot);
         return true;
-        //var targetPos = position;
-        //var bounds = new Bounds( targetPos, Vector3.one * radius * 2f );
-
-        //return Distance( targetPos, cullingDistance ) && TestAABB( bounds );
-
     }
 
 

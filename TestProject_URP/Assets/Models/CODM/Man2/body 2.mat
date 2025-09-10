@@ -25,14 +25,13 @@ Material:
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
+  - _IBLBRDFMODE_PRE_INTEGRATION
+  - _MRAE_MAP_ENABLED
+  m_InvalidKeywords:
   - DIRECTDIFFUSE
   - DIRECTSPECULAR
   - INDIRECTDIFFUSE
   - INDIRECTSPECULAR
-  - _IBLBRDFMODE_PRE_INTEGRATION
-  - _LIGHTMODE_STANDARD
-  - _MRAE_MAP_ENABLED
-  m_InvalidKeywords:
   - _DIRECTDIFFUSE
   - _DIRECTSPECULAR
   - _DirectDiffuse
@@ -41,6 +40,7 @@ Material:
   - _INDIRECTSPECULAR
   - _IndirectDiffuse
   - _IndirectSpecular
+  - _LIGHTMODE_STANDARD
   - _SHOWMODE_COMPLETE
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -172,18 +172,25 @@ Material:
     m_Floats:
     - _AO: 0
     - _AlphaClip: 0
+    - _AlphaClipEnabled: 0
     - _Anisotropic: 0
     - _BentnormalEnabled: 0
     - _Blend: 0
     - _BumpScale: 1
+    - _CheckValue: 0
+    - _ChkRange: 0.045
+    - _ChkTargetScale: 1
+    - _ChkTargetValue: 0.1842
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
     - _Cull: 2
+    - _CullMode: 2
     - _Cutoff: 0.5
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
     - _DirectDiffuse: 1
     - _DirectSpecular: 1
+    - _DitherEnabled: 0
     - _DstBlend: 0
     - _EnvironmentReflections: 1
     - _GlossMapScale: 0
@@ -203,6 +210,7 @@ Material:
     - _Parallax: 0.005
     - _QueueOffset: 0
     - _ReceiveShadows: 1
+    - _Reflectivity: 0.5
     - _Roughness: 0.5
     - _RoughnessAdd: 0
     - _SHOWMODE: 0

@@ -30,9 +30,9 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Exposure: 0.45
+    - _Exposure: 0.95
     - _ExposureExtentionValue: -0.5
-    - _Rotation: 29
+    - _Rotation: 0
     - _Saturation: 1
     m_Colors: []
   m_BuildTextureStacks: []

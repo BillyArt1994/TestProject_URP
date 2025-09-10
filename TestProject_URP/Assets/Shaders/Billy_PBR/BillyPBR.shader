@@ -29,6 +29,9 @@
         
         [KeywordEnum(UE4_BRDFApprox,Pre_Integration)] _IBLBrdfMode ("IBL Specular BRDF Mode",float) = 1.0
 
+        _DetailMap("DetailMap",2D) = "black" {}
+        _IDMap("IDMap",2D) = "black" {}
+
 		//[Toggle(_CHECKVALUE)]_CheckValue("> Measure The Output Value", Float) = 0
        //_ChkTargetValue(" ORANGE-GREEN-BLUE", Range(-0.1, 5.0)) = 0.1842
        //[Enum(x0.01,0.01, x0.1,0.1, x1,1.0, x10,10.0, x100,100.0, x1000,1000.0, x10000,10000.0)]_ChkTargetScale("    (Higher - Hit - Lower)", Range( 0.001, 1000.0)) = 1.0
@@ -134,5 +137,5 @@
             ENDHLSL
         }
     }
-    CustomEditor "CommonShaderGUI.BillyPBRShaderGUI"
+   // CustomEditor "CommonShaderGUI.BillyPBRShaderGUI"
 }

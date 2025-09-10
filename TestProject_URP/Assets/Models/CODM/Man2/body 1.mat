@@ -25,13 +25,13 @@ Material:
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
+  - _IBLBRDFMODE_UE4_BRDFAPPROX
+  - _MRAE_MAP_ENABLED
+  m_InvalidKeywords:
   - DIRECTDIFFUSE
   - DIRECTSPECULAR
   - INDIRECTDIFFUSE
   - INDIRECTSPECULAR
-  - _IBLBRDFMODE_UE4_BRDFAPPROX
-  - _MRAE_MAP_ENABLED
-  m_InvalidKeywords:
   - _DIRECTDIFFUSE
   - _DIRECTSPECULAR
   - _DirectDiffuse
@@ -177,6 +177,10 @@ Material:
     - _BentnormalEnabled: 0
     - _Blend: 0
     - _BumpScale: 1
+    - _CheckValue: 0
+    - _ChkRange: 0.045
+    - _ChkTargetScale: 1
+    - _ChkTargetValue: 0.1842
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
     - _Cull: 2

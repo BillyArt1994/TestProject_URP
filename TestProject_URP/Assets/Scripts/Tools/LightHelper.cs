@@ -35,13 +35,15 @@ public class LightHelper : MonoBehaviour
     void LateUpdate()
     {
 
-        if (transform.hasChanged || m_targetObj.transform.hasChanged)
+        if ((transform.hasChanged || m_targetObj.transform.hasChanged)&& (m_light.type == LightType.Spot))
         {
             Lookat();
         }
     }
     public void OnDrawGizmos()
     {
+        if (m_light.type == LightType.Spot) 
+        {
         if (Selection.activeGameObject != gameObject && m_alwayShow == false) return;
         if (m_targetObj == null || m_drawHelpGizmos == false) return;
         Gizmos.color = m_lineColor;
@@ -73,6 +75,7 @@ public class LightHelper : MonoBehaviour
             var arcNormal = Vector3.Cross(targetToScrDirUnNmz.normalized, guidesDir.normalized);
             Handles.DrawWireArc(m_targetObj.transform.position, arcNormal, targetToScrDirUnNmz.normalized, angle, m_angleInfoPos);
             Gizmos.DrawLine(m_targetObj.position, guidesPos);
+        }
         }
     }
     void Lookat()

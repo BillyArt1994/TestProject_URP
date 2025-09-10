@@ -17,7 +17,7 @@ struct Light
     half    shadowAttenuation;
     uint    layerMask;
 
-    #if defined(_CUSTOM_THICKNESS)
+    #if defined(_THICKFROMSHADOW_ENABLED)
     //custom thickness form shadomap
     half    thickness;
     #endif
@@ -116,7 +116,7 @@ Light GetMainLight()
     light.color = _MainLightColor.rgb;
 
     light.layerMask = _MainLightLayerMask;
-#if defined(_CUSTOM_THICKNESS)
+#if defined(_THICKFROMSHADOW_ENABLED)
     light.thickness = 1.0;
 #endif
     return light;
@@ -133,7 +133,7 @@ Light GetMainLight(float4 shadowCoord,float3 normalWS)
 {   
     Light light = GetMainLight();
     // get shadow Attenuation and Thickness
-    #if defined(_CUSTOM_THICKNESS)
+    #if defined(_THICKFROMSHADOW_ENABLED)
     MainLightRealtimeShadowAndThickness(shadowCoord,normalWS,light.direction,light.shadowAttenuation,light.thickness);
     #else
     light = GetMainLight(shadowCoord);

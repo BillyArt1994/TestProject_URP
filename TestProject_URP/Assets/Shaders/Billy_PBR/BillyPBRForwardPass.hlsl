@@ -154,8 +154,8 @@ float4 PBRPassFragment (Varyings input) : SV_Target
     float4 checkColor = tex2D(_CheckTex,input.uv_Check);
     col.xyz = lerp(col,checkColor.xyz,checkColor.a);
     #endif
-
-    return col;
+   // float3 reflDir = reflect(-viewDir, normal);
+    return float4(col.xyz,1.0);
 
 }
 #endif

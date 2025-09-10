@@ -12,12 +12,17 @@ Material:
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
+  - _DIRECTDIFFUSE_DISPLAYER
+  - _DIRECTSPECULAR_DISPLAYER
+  - _IBLBRDFMODE_PRE_INTEGRATION
+  - _INDIRECTDIFFUSE_DISPLAYER
+  - _INDIRECTSPECULAR_DISPLAYER
+  - _THICKFROMSHADOW_ENABLED
+  m_InvalidKeywords:
   - DIRECTDIFFUSE
   - DIRECTSPECULAR
   - INDIRECTDIFFUSE
   - INDIRECTSPECULAR
-  - _IBLBRDFMODE_PRE_INTEGRATION
-  m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -147,10 +152,11 @@ Material:
     - _ClearCoatSmoothness: 0
     - _Cull: 2
     - _CullMode: 2
-    - _CurvatureFactore: 1
+    - _CurvatureFactore: 0.81
     - _Cutoff: 0
-    - _DeepScale: 1
-    - _DeepScatterFalloff: 1
+    - _DeepScale: -0.12
+    - _DeepScatteIntensity: -119.4
+    - _DeepScatterFalloff: 323.17
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
     - _DirectDiffuse: 1
@@ -176,7 +182,7 @@ Material:
     - _Reflectivity: 0.5
     - _Roughness: 0.523
     - _SkinSecondSpecScale: 0.251
-    - _SkinToneScale: 0.167
+    - _SkinToneScale: 0.363
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
@@ -184,6 +190,7 @@ Material:
     - _SrcBlendAlpha: 1
     - _Surface: 0
     - _THICKNESS: 0
+    - _ThickFromShadowEnabled: 1
     - _TranslucencyScale: 0
     - _TranslucencyThreshold: -16.57
     - _TranslucencyViewDependency: 0

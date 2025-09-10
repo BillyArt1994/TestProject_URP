@@ -12,13 +12,14 @@ Material:
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
+  - _IBLBRDFMODE_PRE_INTEGRATION
+  - _MRAE_MAP_ENABLED
+  - _NORMAL_MAP_ENABLED
+  m_InvalidKeywords:
   - DIRECTDIFFUSE
   - DIRECTSPECULAR
   - INDIRECTDIFFUSE
   - INDIRECTSPECULAR
-  - _IBLBRDFMODE_PRE_INTEGRATION
-  - _MRAE_MAP_ENABLED
-  m_InvalidKeywords:
   - THICKNESS
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -144,7 +145,7 @@ Material:
     - _CheckValue: 0
     - _ChkRange: 0.045
     - _ChkTargetScale: 1
-    - _ChkTargetValue: 0.1842
+    - _ChkTargetValue: 0.18
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
     - _Cull: 2
@@ -164,13 +165,14 @@ Material:
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
-    - _HorizonFade: 1
+    - _HorizonFade: 0.25
     - _IBLBrdfMode: 1
     - _IndirectDiffuse: 1
     - _IndirectSpecular: 1
     - _MRAEMapEnabled: 1
     - _Metalic: 0
     - _Metallic: 0
+    - _NORMALMapEnabled: 1
     - _OcclusionStrength: 1
     - _Parallax: 0.005
     - _QueueOffset: 0

@@ -12,12 +12,12 @@ Material:
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
+  - _IBLBRDFMODE_PRE_INTEGRATION
+  m_InvalidKeywords:
   - DIRECTDIFFUSE
   - DIRECTSPECULAR
   - INDIRECTDIFFUSE
   - INDIRECTSPECULAR
-  - _IBLBRDFMODE_PRE_INTEGRATION
-  m_InvalidKeywords:
   - THICKNESS
   - _SPECULARHIGHLIGHTS_OFF
   m_LightmapFlags: 4
@@ -66,6 +66,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _DetailMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _DetailMask:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -79,6 +83,10 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _HeightMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _IDMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -158,7 +166,7 @@ Material:
     - _CameraFarFadeDistance: 2
     - _CameraNearFadeDistance: 1
     - _CheckValue: 0
-    - _ChkRange: 0.045
+    - _ChkRange: 0.02
     - _ChkTargetScale: 1
     - _ChkTargetValue: 0.18
     - _ClearCoatMask: 0
@@ -184,7 +192,7 @@ Material:
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
-    - _HorizonFade: 0.25
+    - _HorizonFade: 0
     - _IBLBrdfMode: 1
     - _IOR: 1.5
     - _IndirectDiffuse: 1
@@ -195,6 +203,7 @@ Material:
     - _MetalicAdd: 0
     - _Metallic: 0
     - _Mode: 0
+    - _NORMALMapEnabled: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.005
     - _QueueOffset: 0

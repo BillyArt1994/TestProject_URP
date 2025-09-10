@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 0
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0, g: 0, b: 0, a: 1}
-  m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  m_SkyboxMaterial: {fileID: 2100000, guid: 4864c3739d1b85641b1dd211b6a67004, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -38,7 +38,6 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.048970103, g: 0.051594295, b: 0.046568677, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -97,8 +96,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 112000000, guid: db34b53772ed70548840d5b17c29345f,
-    type: 2}
+  m_LightingDataAsset: {fileID: 0}
   m_LightingSettings: {fileID: 0}
 --- !u!196 &4
 NavMeshSettings:
@@ -804,9 +802,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_targetObj: {fileID: 1257261461}
+  m_distanceInfoPos: 0.9
+  m_angleInfoPos: 0.08
   m_lineColor: {r: 1, g: 0, b: 0, a: 1}
-  m_drawGizmos: 1
-  m_showDisInfo: 1
+  m_drawHelpGizmos: 1
+  m_showDistanceInfo: 1
+  m_showAngleInfo: 1
   m_alwayShow: 1
 --- !u!114 &96572684
 MonoBehaviour:
@@ -889,7 +890,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 1.02e-43, y: 9.8e-44, z: 6.572e-42, w: 0}
+  m_BoundingSphereOverride: {x: 0, y: 0, z: 1051.361, w: 8.080928e-37}
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
@@ -941,9 +942,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_targetObj: {fileID: 1257261461}
+  m_distanceInfoPos: 0.9
+  m_angleInfoPos: 0.1
   m_lineColor: {r: 1, g: 0, b: 0, a: 1}
-  m_drawGizmos: 1
-  m_showDisInfo: 1
+  m_drawHelpGizmos: 1
+  m_showDistanceInfo: 1
+  m_showAngleInfo: 1
   m_alwayShow: 1
 --- !u!114 &101669992
 MonoBehaviour:
@@ -981,13 +985,13 @@ Light:
   m_Type: 0
   m_Shape: 0
   m_Color: {r: 0.9292453, g: 0.9527643, b: 1, a: 1}
-  m_Intensity: 19.2
+  m_Intensity: 36.8
   m_Range: 4.6
   m_SpotAngle: 40.52829
   m_InnerSpotAngle: 40.52829
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 1
+    m_Type: 0
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -1026,7 +1030,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 1.02e-43, y: 4.57e-43, z: 4.114e-42, w: -3.7481678e-29}
+  m_BoundingSphereOverride: {x: 6.82e-43, y: 6e-44, z: 7e-45, w: 1.6227e-41}
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
@@ -1039,8 +1043,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 101669990}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.2373184, y: -0.2276998, z: 0.057326302, w: 0.94262743}
-  m_LocalPosition: {x: 1.24, y: 3.14, z: -2.28}
+  m_LocalRotation: {x: 0.1881526, y: -0.4072319, z: 0.08613307, w: 0.889574}
+  m_LocalPosition: {x: 2.219, y: 2.979, z: -1.781}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1955,19 +1959,19 @@ ReflectionProbe:
   m_Type: 0
   m_Mode: 1
   m_RefreshMode: 1
-  m_TimeSlicingMode: 0
-  m_Resolution: 128
+  m_TimeSlicingMode: 1
+  m_Resolution: 1024
   m_UpdateFrequency: 0
   m_BoxSize: {x: 10, y: 10, z: 10}
   m_BoxOffset: {x: 0, y: 0, z: 0}
   m_NearClip: 0.3
   m_FarClip: 30
   m_ShadowDistance: 100
-  m_ClearFlags: 2
+  m_ClearFlags: 1
   m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 118
+    m_Bits: 375
   m_IntensityMultiplier: 1
   m_BlendDistance: 1
   m_HDR: 1

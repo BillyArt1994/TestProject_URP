@@ -316,7 +316,12 @@ void SampleShadowmapCustomFilteredAndEvaluateThickness(TEXTURE2D_PARAM(ShadowMap
       shadowZBias = lightDir * _ShadowBias.xxx + shadowCoord.z;
       shadowZBias = normalWS * scale.xxx + shadowCoord.z;
       PCFshadow += shadowMapZ < shadowZBias ? 0.0 : 1.0;
-      thickness += max(shadowCoord.z -shadowMapZ,0.0);
+        
+     //#if !defined(UNITY_REVERSED_Z)
+     //shadowCoord.z =  1-shadowCoord.z;
+     //#endif
+      
+      thickness += shadowCoord.z;//max(shadowCoord.z -shadowMapZ,0.0);
       cnt += 1.0;
     }
     
@@ -325,7 +330,7 @@ void SampleShadowmapCustomFilteredAndEvaluateThickness(TEXTURE2D_PARAM(ShadowMap
     attenuation =  PCFshadow/cnt;
     attenuation = LerpWhiteTo(attenuation, shadowStrength);
     attenuation = BEYOND_SHADOW_FAR(shadowCoord) ? 1.0 : attenuation;
-    thickness = thickness/cnt;
+    thickness = thickness*(1.0/cnt);
 }
 
 real SampleShadowmapFiltered(TEXTURE2D_SHADOW_PARAM(ShadowMap, sampler_ShadowMap), float4 shadowCoord, ShadowSamplingData samplingData)
